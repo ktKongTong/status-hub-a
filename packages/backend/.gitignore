@@ -1,0 +1,9 @@
+.wrangler
+.drizzle.env
+.env
+.env.local
+dist
+drizzle
+data
+node_modules
+wrangler.toml

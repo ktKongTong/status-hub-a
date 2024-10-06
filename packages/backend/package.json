@@ -1,0 +1,60 @@
+{
+  "name": "status-hub-backend",
+  "scripts": {
+    "dev": "source .env.local && tsx watch src/index.ts",
+    "build": "tsc -p tsconfig.json && tsc-alias",
+    "db:init": "rm -rf drizzle && rm -rf data && mkdir data && drizzle-kit generate && drizzle-kit migrate",
+    "rebuild": "rm -rf dist && npm run build",
+    "start": "node --experimental-specifier-resolution=node ./dist/index.js",
+    "deploy": "wrangler deploy --minify src/index.ts",
+    "db:g-and-m": "rm -rf drizzle && rm -rf data && mkdir data && pnpm db:generate &&  pnpm db:migrate:node",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate:node": "drizzle-kit migrate",
+    "db:migrate:local": "wrangler d1 migrations apply cf-status --local",
+    "db:migrate:prod": "wrangler d1 migrations apply cf-status --remote",
+    "db:migrate:preview": "wrangler d1 migrations apply --env preview cf-status-preview --remote",
+    "db:studio:node": "drizzle-kit studio",
+    "db:studio:local": "LOCAL_DB_PATH=$(find .wrangler/state/v3/d1/miniflare-D1DatabaseObject -type f -name '*.sqlite' -print -quit) drizzle-kit studio"
+  },
+  "files": [
+    "dist",
+    "package.json",
+    "data"
+  ],
+  "type": "module",
+  "dependencies": {
+    "@anatine/zod-mock": "^3.13.4",
+    "@auth/core": "^0.35.3",
+    "@auth/drizzle-adapter": "^1.5.3",
+    "@bull-board/hono": "^6.0.0",
+    "@hono/node-server": "^1.13.1",
+    "@hono/zod-openapi": "^0.16.2",
+    "@lucia-auth/adapter-drizzle": "^1.1.0",
+    "@scalar/hono-api-reference": "^0.5.149",
+    "add": "^2.0.6",
+    "arctic": "2.0.0-next.9",
+    "bullmq": "^5.16.0",
+    "drizzle-orm": "^0.33.0",
+    "drizzle-zod": "^0.5.1",
+    "hono": "^4.6.3",
+    "lucia": "^3.2.0",
+    "status-hub-shared": "workspace:*",
+    "better-sqlite3": "^11.3.0",
+    "dotenv": "^16.4.5",
+    "zod": "^3.23.8",
+    "@bull-board/api": "^6.0.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240529.0",
+    "@types/better-sqlite3": "^7.6.11",
+    "@types/bull": "^4.10.0",
+    "@types/node": "^20",
+    "cross-env": "^7.0.3",
+    "drizzle-kit": "^0.24.2",
+    "pnpm": "^9.11.0",
+    "tsc-alias": "^1.8.10",
+    "tsx": "^4.19.1",
+    "typescript": "^5",
+    "wrangler": "^3.57.2"
+  }
+}

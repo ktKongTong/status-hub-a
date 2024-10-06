@@ -1,0 +1,38 @@
+{
+  "name": "status-hub-shared",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc && tsc-alias"
+  },
+  "types": "module",
+  "files": [
+    "package.json",
+    "lib"
+  ],
+  "exports": {
+    "./models": {
+      "default": "./lib/models/index.js",
+      "types": "./src/models/index.ts",
+      "import": "./lib/models/index.js"
+    },
+    "./utils": {
+      "default": "./lib/utils/index.js",
+      "types": "./src/utils/index.ts",
+      "import": "./lib/utils/index.js"
+    }
+  },
+  "dependencies": {
+    "consola": "^3.2.3",
+    "zod": "^3.23.8",
+    "@anatine/zod-mock": "^3.13.4",
+    "@hono/zod-openapi": "^0.16.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.13",
+    "tsc-alias": "^1.8.10",
+    "typescript": "^5"
+  }
+}
