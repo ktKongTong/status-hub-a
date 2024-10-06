@@ -34,3 +34,6 @@ packages/frontend/.env.local
 packages/frontend/.drizzle.env
 # misc
 .DS_Store
+docker-compose.local.yml
+sqlite.db
+.env.docker
