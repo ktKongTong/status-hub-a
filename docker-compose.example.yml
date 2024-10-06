@@ -1,0 +1,41 @@
+version: '3'
+services:
+  redis:
+    image: redis:latest
+    container_name: redis-status-hub-text
+    command: redis-server --appendonly yes
+    restart: always
+    networks:
+      - status-hub
+  status-hub-be:
+    image: status-hub-backend:latest
+    container_name: status-hub-backend
+    ports:
+      - 8000:8000
+    environment:
+      - GITHUB_AUTH_CLIENT_ID=client_id
+      - GITHUB_AUTH_CLIENT_SECRET=secret
+      - GITHUB_AUTH_REDIRECT_URL=http://localhost:8001/api/auth/login/github/callback
+      - GITHUB_CLIENT_ID=client_id
+      - GITHUB_CLIENT_SECRET=secret
+      - GITHUB_REDIRECT_URL=http://localhost:8001/api/route/adapter/github/callback
+      - SPOTIFY_CLIENT_ID=client_id
+      - SPOTIFY_CLIENT_SECRET=secret
+      - SPOTIFY_REDIRECT_URL=http://localhost:8001/api/route/adapter/spotify/callback
+      - BULLMQ_REDIS_HOST=redis-status-hub-text
+      - BULLMQ_REDIS_PORT=6379
+      - PORT=8000
+      - NODE_ENV=test
+    networks:
+      - status-hub
+  status-hub-fe:
+    image: status-hub-frontend:latest
+    container_name: status-hub-frontend
+    ports:
+      - 8001:3000
+    environment:
+      - BACKEND_BASE_URL=http://status-hub-backend:8000
+    networks:
+      - status-hub
+networks:
+  status-hub:
