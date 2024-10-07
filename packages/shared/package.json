@@ -8,6 +8,7 @@
   "types": "module",
   "files": [
     "package.json",
+    "src",
     "lib"
   ],
   "exports": {

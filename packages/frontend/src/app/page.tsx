@@ -1,11 +1,5 @@
-
-import React from "react";
+import {redirect} from "next/navigation";
 
 export default function Home() {
-  return (
-        <div className="flex flex-col justify-between w-full h-full min-h-screen">
-
-        </div>
-  )
+  return redirect('/credentials')
 }
-

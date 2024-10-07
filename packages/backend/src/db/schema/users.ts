@@ -59,6 +59,7 @@ export const verificationTokens = sqliteTable(
     expires: integer("expires").notNull(),
     createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
     updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`).$onUpdateFn(() => new Date()),
+    // lastUsedAt: integer('lastUsedAt').notNull(),
   },
   (verificationToken) => ({
     compositePk: primaryKey({

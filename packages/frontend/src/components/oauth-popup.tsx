@@ -11,6 +11,7 @@ type IPopupProps = IWindowProps & {
   onClose: () => void;
   onCode: (code: string, params: URLSearchParams) => void;
   children: React.ReactNode;
+  className?: string
 };
 
 const createPopup = ({
@@ -34,6 +35,7 @@ const OauthPopup: React.FC<IPopupProps> = ({
                                              children,
                                              onCode,
                                              onClose,
+  className
                                            }: IPopupProps) => {
   const [externalWindow, setExternalWindow] = useState<Window | null>();
   const intervalRef = useRef<number>();
@@ -55,6 +57,7 @@ const OauthPopup: React.FC<IPopupProps> = ({
           const currentUrl = externalWindow.location.href;
           const params = new URL(currentUrl).searchParams;
           const code = params.get('code');
+
           if (!code) {
             return;
           }
@@ -82,6 +85,7 @@ const OauthPopup: React.FC<IPopupProps> = ({
   return (
     // eslint-disable-next-line
     <div
+      className={className}
       onClick={() => {
     onContainerClick();
   }}

@@ -1,5 +1,6 @@
 import { MiddlewareHandler } from 'hono';
 import {time, logger} from "status-hub-shared/utils";
+import {isDebug} from "@/utils/env";
 
 enum LogPrefix {
   Outgoing = '-->',
@@ -30,6 +31,11 @@ const middleware: MiddlewareHandler = async (ctx, next) => {
   await next();
   // logger response body
   // isDebug() && logger.info();
+  if(isDebug()) {
+    const res = await ctx.res.json()
+    logger.info(`${JSON.stringify(res)}`);
+  }
+
   const status = ctx.res.status;
   logger.info(`${LogPrefix.Outgoing} ${method} ${path} ${colorStatus(status)} ${time(start)}`);
 };

@@ -5,11 +5,12 @@
     "build": "tsc -p tsconfig.json && tsc-alias",
     "db:init": "rm -rf drizzle && rm -rf data && mkdir data && drizzle-kit generate && drizzle-kit migrate",
     "rebuild": "rm -rf dist && npm run build",
-    "start": "node --experimental-specifier-resolution=node ./dist/index.js",
+    "start": "node --experimental-specifier-resolution=node ./dist/scripts/migration.js && node --experimental-specifier-resolution=node ./dist/src/index.js",
     "deploy": "wrangler deploy --minify src/index.ts",
-    "db:g-and-m": "rm -rf drizzle && rm -rf data && mkdir data && pnpm db:generate &&  pnpm db:migrate:node",
+    "db:prune": "rm -rf drizzle && rm -rf data && mkdir data && pnpm db:generate &&  pnpm db:migrate:node",
     "db:generate": "drizzle-kit generate",
-    "db:migrate:node": "drizzle-kit migrate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:kit:migrate:node": "tsx scripts/migration.ts",
     "db:migrate:local": "wrangler d1 migrations apply cf-status --local",
     "db:migrate:prod": "wrangler d1 migrations apply cf-status --remote",
     "db:migrate:preview": "wrangler d1 migrations apply --env preview cf-status-preview --remote",
@@ -18,8 +19,9 @@
   },
   "files": [
     "dist",
-    "package.json",
-    "data"
+    "drizzle",
+    "src",
+    "package.json"
   ],
   "type": "module",
   "dependencies": {

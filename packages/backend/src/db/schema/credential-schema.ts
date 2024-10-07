@@ -13,14 +13,13 @@ export const credentialSchema = sqliteTable('credential_schema', {
     refreshLogicType: text('refresh_logic_type', {enum: ['system', 'script']}).notNull().default('script'),
     // remove refreshLogic in query
     refreshLogic: text('refresh_logic'),
-    minimalRefreshIntervalInSec: integer('minimal_refresh_interval_in_sec').notNull().default(0),
+    maximumRefreshIntervalInSec: integer('maximum_refresh_interval_in_sec').notNull().default(0),
     availablePermissions: text('available_permissions').notNull(),
     permissions: text('permissions').notNull(),
-    createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`).$onUpdateFn(() => new Date()),
+    createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
     updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`).$onUpdateFn(() => new Date()),
     status: text('status', { enum: ['ok', 'deleted'] }).notNull().default('ok'),
     createdBy: text('created_by', { enum: ['user', 'system'] }).notNull().default('user'),
-    // system: integer('system', {mode: 'boolean'}).notNull().default(false),
 }, (table) => ({
     pk: primaryKey({ columns: [table.id, table.schemaVersion] }),
 }))
@@ -36,7 +35,7 @@ export const credentialSchemaFields = sqliteTable('credential_schema_fields', {
     fieldType: text('field_type', { enum: ['string', 'number', 'boolean'] }).notNull(),
     isRequired: integer('is_required', { mode: 'boolean' }).notNull(),
     description: text('description').notNull().default(""),
-    createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`).$onUpdateFn(() => new Date()),
+    createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
     updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`).$onUpdateFn(() => new Date()),
 }, (table) => ({
     schemaReference: foreignKey({

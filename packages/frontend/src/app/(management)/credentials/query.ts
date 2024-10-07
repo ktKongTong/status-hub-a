@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 import {CredentialInsert, CredentialUpdate} from 'status-hub-shared/models'
+import {useToast} from "@/hooks/use-toast";
 
 const API_URL = '/api/credential';
 
@@ -18,6 +19,7 @@ export function useCredentials() {
 }
 
 export function useCreateCredential() {
+  const {toast} = useToast();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (newCredential: CredentialInsert) => {
@@ -32,6 +34,10 @@ export function useCreateCredential() {
       return response.json();
     },
     onSuccess: () => {
+
+      toast({
+        title: "创建成功",
+      })
       queryClient.invalidateQueries({ queryKey: ['credentials'] });
     },
   });
@@ -39,6 +45,8 @@ export function useCreateCredential() {
 
 export function useUpdateCredential() {
   const queryClient = useQueryClient();
+
+  const {toast} = useToast();
   return useMutation({
     mutationFn: async (updatedCredential: CredentialUpdate) => {
       console.log("update", updatedCredential);
@@ -53,6 +61,9 @@ export function useUpdateCredential() {
       return response.json();
     },
     onSuccess: () => {
+      toast({
+        title: "更新成功",
+      })
       queryClient.invalidateQueries({ queryKey: ['credentials'] });
     },
   });

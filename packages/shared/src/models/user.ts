@@ -17,3 +17,20 @@ export const CurrentUserSchema = z
       avatar: 'https://api.dicebear.com/7.x/adventurer-neutral/svg?seed=mail@ashallendesign.co.uk'
     }
   })
+
+export const TokenSelectSchema  = z.object({
+  userId: z.string(),
+  identifier: z.string(),
+  // sec 有效期
+  expires: z.number(),
+  createdAt: z.date(),
+  updatedAt: z.date()
+})
+
+export const TokenCreateResultSchema = TokenSelectSchema.merge(z.object({
+  token: z.string()
+}))
+
+
+export type TokenCreateResult = z.infer<typeof TokenCreateResultSchema>
+export type TokenSelect = z.infer<typeof TokenSelectSchema>

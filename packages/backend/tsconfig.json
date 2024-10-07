@@ -19,7 +19,7 @@
     "jsxImportSource": "hono/jsx"
   },
 
-  "include": ["src/*"],
+  "include": ["src/*","scripts/*"],
   "exclude": ["node_modules"],
   "tsc-alias": {
     "resolveFullPaths": true

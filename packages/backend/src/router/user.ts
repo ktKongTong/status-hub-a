@@ -1,8 +1,8 @@
 import {getDB} from "@/middleware/db";
 import {getSession} from "@/middleware/auth";
-import { OpenAPIHono } from "@hono/zod-openapi";
+import { OpenAPIHono, z } from "@hono/zod-openapi";
 import R from "@/utils/openapi";
-import { CurrentUserSchema } from "status-hub-shared/models";
+import {CurrentUserSchema, TokenCreateResultSchema, TokenSelectSchema} from "status-hub-shared/models";
 import {randomString} from "@/utils";
 
 export const userRouter = new OpenAPIHono();
@@ -26,6 +26,7 @@ userRouter.openapi(
 userRouter.openapi(
   R
     .get('/api/user/token')
+    .respBodySchema(z.array(TokenSelectSchema))
     .buildOpenAPI('Retrieve current user basic info'),
   async (c) => {
     const { user} = getSession(c)
@@ -40,6 +41,7 @@ userRouter.openapi(
   R
     .post('/api/user/token')
     // .reqBodySchema(CurrentUserSchema)
+    .respBodySchema(TokenCreateResultSchema)
     .buildOpenAPI('Retrieve current user basic info'),
   async (c) => {
     const { user} = getSession(c)
@@ -67,5 +69,7 @@ userRouter.openapi(
     const userId = user!.id
     const body = await c.req.json()
     const res = await dao.userDAO.removeToken(userId, body.identifier)
-    return c.json(res)
+    return c.json({
+      message: "成功删除凭证"
+    })
   });

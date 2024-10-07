@@ -42,6 +42,7 @@ function SideNav() {
       <ul>
         <li><RouteItem name={"凭证管理"} path={"/credentials"}/></li>
         <li><RouteItem name={"Schema管理"} path={"/schemas"}/></li>
+        <li><RouteItem name={"Token管理"} path={"/token"}/></li>
       </ul>
     </div>
   )

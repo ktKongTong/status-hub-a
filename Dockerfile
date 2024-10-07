@@ -20,7 +20,7 @@ WORKDIR /prod/status-hub-frontend
 EXPOSE 3000
 CMD [ "npm", "run", "start" ]
 
-FROM base AS status-hub-frontend
+FROM base AS status-hub-backend
 COPY --from=build /prod/status-hub-backend /prod/status-hub-backend
 WORKDIR /prod/status-hub-backend
 VOLUME ["/prod/status-hub-backend/data"]
