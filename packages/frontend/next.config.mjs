@@ -1,19 +1,19 @@
 
+// rewrite only support at build phase
+// see: https://github.com/vercel/next.js/discussions/33932
+import path from "node:path";
+import {fileURLToPath, } from "node:url";
 
-const basePath = process.env.BACKEND_BASE_URL
-const nextConfig = {
-    async rewrites() {
-        return [
-            {
-                source: '/auth/:path*',
-                destination: `${basePath}/auth/:path*`,
-            },
-            {
-                source: '/api/:path*',
-                destination: `${basePath}/api/:path*`,
-            },
-        ]
-    },
-};
-
-export default nextConfig;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+export default (phase, { defaultConfig }) => {
+    return {
+        ...defaultConfig,
+        reactStrictMode: true,
+        swcMinify: true,
+        // output: "standalone",
+        // still can not work with docker + pnpm workspace properly
+        // https://github.com/vercel/next.js/discussions/38435
+        // experimental: { outputFileTracingRoot: path.join(__dirname, "../../") },
+    };
+}
