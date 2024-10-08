@@ -15,6 +15,7 @@ target "docker-metadata-action" {}
 target "builder" {
   dockerfile = "docker/base.Dockerfile"
   target = "builder"
+  tags = ["builder:latest"]
 }
 
 target "backend" {
@@ -22,6 +23,9 @@ target "backend" {
   context = "."
   dockerfile = "docker/backend.Dockerfile"
   tags = ["${REGISTRY}/${REPO}-backend:latest"]
+  contexts = {
+    base = "target:builder"
+  }
 }
 
 target "frontend" {
@@ -29,4 +33,8 @@ target "frontend" {
   context = "."
   dockerfile = "docker/backend.Dockerfile"
   tags = ["${REGISTRY}/${REPO}-frontend:latest"]
+  contexts = {
+    base = "target:builder"
+  }
 }
+

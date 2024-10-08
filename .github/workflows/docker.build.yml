@@ -45,6 +45,6 @@ jobs:
           set: |
             *.cache-from=type=gha
             *.cache-to=type=gha,mode=max
-
+          targets: builder,backend,frontend
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
