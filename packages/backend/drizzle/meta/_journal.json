@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1728223985665,
+      "tag": "0000_rich_cannonball",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1728284790761,
+      "tag": "0001_dazzling_kabuki",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1728301960474,
+      "tag": "0002_last_sharon_ventura",
+      "breakpoints": true
+    }
+  ]
+}
