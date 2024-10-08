@@ -51,7 +51,7 @@ export const CredentialSchemaSelectItemSchema = z.object({
     autoRefreshable: z.boolean(),
     refreshLogicType: z.enum(['system', 'script']).default('system'),
     refreshLogic: z.string().optional().nullish(),
-    minimalRefreshIntervalInSec: z.number(),
+    maximumRefreshIntervalInSec: z.number(),
     // autoRefreshable: integer('auto_refreshable', { mode: 'boolean' }).notNull().default(false),
     // refreshLogicType: text('refresh_logic_type', {enum: ['system', 'script']}).notNull().default('script'),
     // // remove refreshLogic in query

@@ -235,7 +235,7 @@ export class SchemaDAO implements ISchemaDAO {
             refreshLogicType: row.schema.refreshLogicType,
             refreshLogic: row.schema.refreshLogic,
             createdBy: row.schema.createdBy,
-            minimalRefreshIntervalInSec: row.schema.minimalRefreshIntervalInSec,
+            maximumRefreshIntervalInSec: row.schema.maximumRefreshIntervalInSec,
             schemaFields: JSON.parse(row.fields).map((field: any) => ({
                 ...field,
                 isRequired: Boolean(field.isRequired)
