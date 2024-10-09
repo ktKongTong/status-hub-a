@@ -15,7 +15,7 @@ const sqlite =new  Database('./data/sqlite.db');
 
 export const db = drizzle(sqlite);
 
-const dao = new DAO(db)
+export const dao = new DAO(db)
 
 type DBClient = typeof db
 

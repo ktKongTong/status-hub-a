@@ -6,6 +6,7 @@ import {Credential, CredentialRefresh, SchemaField} from "status-hub-shared/mode
 export interface ICredentialDAO {
   addCredential(userId: string, schemaId: string, schemaVersion: number, credentialValues: Record<string, string | number | boolean>): Promise<void>;
   getCredentialByPlatform(userId: string, platform: string): Promise<Credential[]>
+  getCredentialByPlatformAndType(userId: string, platform: string, type: string[]): Promise<Credential[]>
   // getCredentials That need refresh
 
   getNeedRefreshCredentials(): Promise<CredentialRefresh[]>
@@ -215,5 +216,9 @@ export class CredentialDAO implements ICredentialDAO {
   async deleteCredential(credentialId: number): Promise<void> {
     await this.db.delete(tables.platformCredentials)
       .where(eq(tables.platformCredentials.id, credentialId));
+  }
+
+  getCredentialByPlatformAndType(userId: string, platform: string, type: string[]): Promise<Credential[]> {
+    return Promise.resolve([]);
   }
 }

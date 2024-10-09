@@ -48,7 +48,7 @@ export default function UserButton() {
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuItem>
-                <Button variant="ghost" className="w-full p-0" onClick={() => {} }>
+                <Button variant="ghost" className="w-full p-0" onClick={() => route.push('/api/auth/logout') }>
                   Sign Out
                 </Button>
               </DropdownMenuItem>

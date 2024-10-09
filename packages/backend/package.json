@@ -2,8 +2,8 @@
   "name": "status-hub-backend",
   "scripts": {
     "dev": "source .env.local && tsx watch src/index.ts",
-    "build": "tsc -p tsconfig.json && tsc-alias",
-    "db:init": "rm -rf drizzle && rm -rf data && mkdir data && drizzle-kit generate && drizzle-kit migrate",
+    "build": "tsx scripts/build.ts",
+    "db:init": "rm -rf data && mkdir data && drizzle-kit generate && drizzle-kit migrate",
     "rebuild": "rm -rf dist && npm run build",
     "start": "node --experimental-specifier-resolution=node ./dist/scripts/migration.js && node --experimental-specifier-resolution=node ./dist/src/index.js",
     "deploy": "wrangler deploy --minify src/index.ts",
@@ -21,6 +21,7 @@
     "dist",
     "drizzle",
     "src",
+    "assets",
     "package.json"
   ],
   "type": "module",
@@ -35,17 +36,18 @@
     "arctic": "2.0.0-next.9",
     "better-sqlite3": "^11.3.0",
     "bullmq": "^5.16.0",
+    "directory-import": "^3.3.1",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.33.0",
     "drizzle-zod": "^0.5.1",
     "hono": "^4.6.3",
     "lucia": "^3.2.0",
+    "ofetch": "^1.4.1",
     "status-hub-shared": "workspace:*"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240529.0",
     "@types/better-sqlite3": "^7.6.11",
-    "@types/bull": "^4.10.0",
     "cross-env": "^7.0.3",
     "drizzle-kit": "^0.24.2",
     "tsc-alias": "^1.8.10",

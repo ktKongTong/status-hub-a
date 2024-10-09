@@ -1,5 +1,6 @@
 'use client'
-import CustomLink from "@/app/(header)/custom-link";
+
+import Link from "@/components/link";
 import {Button} from "@/components/ui/button";
 import { useMatchPath } from "@/hooks/useMatchPath";
 import { cn } from "@/lib/utils";
@@ -28,11 +29,11 @@ function RouteItem(
   const isActive = useMatchPath(path);
   const activeClass = isActive ? 'bg-zinc-100/90 text-zinc-900' : '';
   return (
-    <CustomLink href={path}>
+    <Link href={path}>
       <Button variant={'ghost'} className={cn('w-full text-xl font-bold', activeClass)}>
         {name}
       </Button>
-    </CustomLink>
+    </Link>
   )
 }
 

@@ -1,30 +1,14 @@
-import {Context, Hono} from "hono";
+import {Context} from "hono";
+import {getCredentialByPlatformAndType} from "../../util";
 import {createSteamAPI} from "./steam";
-import {getCurrentCredential} from "@/router/routes";
+import {CredentialType} from "../../../../interface";
 
-
-interface SteamCredential {
-    apikey: string;
-    steamid: string;
-}
-
-const steamRouter = new Hono().basePath('/steam')
-
-steamRouter.get('/recent', async (c) => {
+const handler = async (c:Context) => {
   const steamid = c.req.param('id')
-  const credentialValues = getCurrentCredential<SteamCredential>(c)
-  const apikey = credentialValues.apikey
-  const c_steamid = credentialValues.steamid
-  const api =  createSteamAPI(apikey, c_steamid)
-  const res = await api.getOwnedGame(steamid)
-  return c.json(res)
-})
-
-steamRouter.get('/activity/recent', async (c) => {
-  const steamid = c.req.param('id')
-  const credentialValues = getCurrentCredential<SteamCredential>(c)
-  const apikey = credentialValues.apikey
-  const c_steamid = credentialValues.steamid
+  const credentials = await getCredentialByPlatformAndType(c, 'steam', ['apiToken'])
+  const credential = credentials[0].credentialValues
+  const apikey = credential.apikey
+  const c_steamid = credential.steamid
   const api =  createSteamAPI(apikey, c_steamid)
   const [ recentOwnedGame,recentGamePlaytime]= await Promise.all([
     await api.getOwnedGame(steamid),
@@ -43,6 +27,11 @@ steamRouter.get('/activity/recent', async (c) => {
     };
   });
   return c.json(gameActivities)
-})
+}
 
-export default steamRouter
+export const steamRecentActivityRoute =  {
+  path: '/activity/recent',
+  raw: true,
+  usableCredentialType: ['apiToken'] as CredentialType[],
+  handler: handler
+}

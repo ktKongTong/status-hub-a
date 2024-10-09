@@ -56,7 +56,6 @@ export const CredentialSchemaSelectItemSchema = z.object({
     // refreshLogicType: text('refresh_logic_type', {enum: ['system', 'script']}).notNull().default('script'),
     // // remove refreshLogic in query
     // refreshLogic: text('refresh_logic'),
-    // minimalRefreshIntervalInSec: integer('minimal_refresh_interval_in_sec').notNull().default(0),
     createdBy: z.enum(['system', 'user']),
     createdAt: z.date(),
     updatedAt: z.date(),

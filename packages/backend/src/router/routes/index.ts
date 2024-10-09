@@ -1,6 +1,6 @@
 
 
-import {Context, Hono} from "hono";
+import { Hono } from "hono";
 import {getDB} from "@/middleware/db";
 import {
   getSession,
@@ -8,10 +8,7 @@ import {
 import {buildCredentialValues} from "@/utils/credential";
 
 import oauthAdapter from "@/router/routes/oauth-adapter";
-import spotifyRouter from "@/router/routes/spotify";
-import steamHono from "./steam";
 import {NotFoundError} from "@/errors";
-import githubRouter from "@/router/routes/github";
 const app = new Hono<{
   Variables: {
     currentCredentialValue: Record<string, any>
@@ -42,15 +39,13 @@ app.use('/:platform/*', async (c, next) => {
   c.set('currentCredentialValue', credentialValues)
   return next()
 })
-.route('/', steamHono)
-.route('/', spotifyRouter)
-.route('/', githubRouter)
 
-export const getCurrentCredential = <T>(c: Context) => {
-  return c.get("currentCredentialValue") as T
-}
 
-// 根据 credential 构建 api
 
+
+app
+// .route('/', steamHono)
+// .route('/', spotifyRouter)
+// .route('/', githubRouter)
 
 export default app

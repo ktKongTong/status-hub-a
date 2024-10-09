@@ -1,7 +1,7 @@
 
 import { serve } from '@hono/node-server'
-import { DBMiddleware } from "@/middleware/db"
-import {luciaMiddleware, sessionMiddleware, verifyMiddleware } from "@/middleware/auth";
+import {dao, db, DBMiddleware, getDB} from "@/middleware/db"
+import {getSession, luciaMiddleware, sessionMiddleware, verifyMiddleware} from "@/middleware/auth";
 import loggerMiddleware from '@/middleware/logger';
 
 
@@ -18,18 +18,11 @@ import routes from "@/router/routes";
 
 import R from '@/utils/openapi'
 import {bulLBoardRouter, initSchedule, onBullBoardStartup} from "@/job";
-import {BizError} from "@/errors";
+import {BizError, NotFoundError} from "@/errors";
 import {env} from "@/utils/env";
 
 
 const app = new OpenAPIHono()
-
-export interface Env {
-  GITHUB_CLIENT_ID: string
-  GITHUB_CLIENT_SECRET: string
-}
-
-
 
 app
 .use("*", loggerMiddleware)
@@ -42,9 +35,6 @@ app
   {path: '/api/reference', method: 'GET'},
   {path: '/api/openapi.json', method: 'GET'},
 ]))
-
-
-
 
 // auth
 app
@@ -60,6 +50,22 @@ app
       .buildOpenAPI('health check'),
     (c) => c.json({data: 'pong'})
   )
+
+import {namespaces, sysSchemas} from '@/route-registry'
+import {Hono} from "hono"
+import {initSystemSchemas} from "@/db/initial";
+
+Object.keys(namespaces)
+.forEach(namespace => {
+  const ns = namespaces[namespace]
+  let h = new Hono().basePath(`/api/route/${ns.platform}`)
+  h = ns.routes.reduce((acc,cur) => acc.get(cur.path, cur.handler), h)
+  app.route(`/`, h)
+})
+
+const sysCredentialSchemas = Object.keys(sysSchemas).map(sysSchemaKey => sysSchemas[sysSchemaKey])
+
+
 
 // biz
 app
@@ -80,16 +86,15 @@ app
 app.onError((err, c)=> {
   if (err instanceof BizError) {
     c.header('X-StatusHub-Biz-Error', err.name);
-    logger.error(err.stack);
     return c.json({ error: err.message }, err.status);
   } else {
-    {
       logger.error(err.stack);
       return c.json({error: '服务器内部错误'}, 500);
-    }
   }
 })
-
+initSystemSchemas(sysCredentialSchemas).then(res => {
+  console.log("sys schema init success")
+})
 initSchedule()
 serve({
   fetch: app.fetch,
@@ -98,6 +103,8 @@ serve({
   onBullBoardStartup(addrInfo)
   logger.info(`StatusHub Running on http://${addrInfo.address}:${addrInfo.port}/`);
 })
+
+
 
 //
 // export default {

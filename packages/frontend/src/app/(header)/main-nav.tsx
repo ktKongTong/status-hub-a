@@ -1,4 +1,4 @@
-import CustomLink from "./custom-link"
+import CustomLink from "@/components/link"
 import React from "react"
 import { Button } from "@/components/ui/button"
 

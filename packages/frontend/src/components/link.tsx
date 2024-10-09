@@ -6,7 +6,7 @@ interface CustomLinkProps extends React.LinkHTMLAttributes<HTMLAnchorElement> {
   href: string
 }
 
-const CustomLink = ({
+const Link = ({
                       href,
                       children,
                       className,
@@ -37,4 +37,4 @@ const CustomLink = ({
   )
 }
 
-export default CustomLink
+export default Link

@@ -29,11 +29,14 @@ const middleware: MiddlewareHandler = async (ctx, next) => {
   logger.info(`${LogPrefix.Incoming} ${method} ${path}`);
   const start = Date.now();
   await next();
-  // logger response body
-  // isDebug() && logger.info();
   if(isDebug()) {
-    const res = await ctx.res.json()
-    logger.info(`${JSON.stringify(res)}`);
+    try {
+      const res = await ctx.res.json()
+      logger.info(`${JSON.stringify(res)}`);
+    }catch (e) {
+
+    }
+
   }
 
   const status = ctx.res.status;

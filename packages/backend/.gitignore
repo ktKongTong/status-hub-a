@@ -4,5 +4,6 @@
 .env.local
 dist
 data
+assets/build
 node_modules
 wrangler.toml

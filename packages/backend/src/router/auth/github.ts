@@ -3,11 +3,11 @@ import { getCookie, setCookie } from "hono/cookie";
 import { generateId } from "lucia";
 import { Hono } from "hono";
 import {getOAuthProvider, getSession} from "@/middleware/auth";
-import { createGitHubAPI } from "@/router/routes/github/github";
 import {getDB} from "@/middleware/db";
 import { env } from 'hono/adapter';
 import {UnknownError} from "@/errors";
 import {isProd} from "@/utils/env";
+import {createGitHubAPI} from "@/router/routes/ns/github/github";
 
 export const githubLoginRouter = new Hono().basePath('/api/auth');
 
