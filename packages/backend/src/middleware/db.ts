@@ -10,7 +10,10 @@ declare module 'hono' {
 
 
 import Database from "better-sqlite3";
-
+import {mkdirSync, existsSync} from "fs";
+if(!existsSync('./data')) {
+    mkdirSync('./data', {recursive: true});
+}
 const sqlite =new  Database('./data/sqlite.db');
 
 export const db = drizzle(sqlite);
