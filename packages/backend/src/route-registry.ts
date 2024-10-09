@@ -18,7 +18,7 @@ switch (process.env.NODE_ENV) {
   case 'test':
   case 'production':
     // @ts-expect-error
-    namespaces = await import('../assets/build/routes.json');
+    namespaces = await import('../assets/build/routes.json', { assert: { type: "json" }});
     break;
   default:
     modules = directoryImport({
