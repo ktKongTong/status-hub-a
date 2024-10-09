@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "2f4ee339-9ed6-4143-a9d9-2a5e9ea9b7bb",
+  "id": "bf8aa490-7072-48ff-bbd2-8054f4f98324",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "platform_credentials": {
@@ -569,8 +569,8 @@
           "notNull": false,
           "autoincrement": false
         },
-        "minimal_refresh_interval_in_sec": {
-          "name": "minimal_refresh_interval_in_sec",
+        "maximum_refresh_interval_in_sec": {
+          "name": "maximum_refresh_interval_in_sec",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,

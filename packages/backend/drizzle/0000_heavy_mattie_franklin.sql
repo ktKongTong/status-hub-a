@@ -78,7 +78,7 @@ CREATE TABLE `credential_schema` (
 	`auto_refreshable` integer DEFAULT false NOT NULL,
 	`refresh_logic_type` text DEFAULT 'script' NOT NULL,
 	`refresh_logic` text,
-	`minimal_refresh_interval_in_sec` integer DEFAULT 0 NOT NULL,
+	`maximum_refresh_interval_in_sec` integer DEFAULT 0 NOT NULL,
 	`available_permissions` text NOT NULL,
 	`permissions` text NOT NULL,
 	`created_at` integer DEFAULT (unixepoch()) NOT NULL,

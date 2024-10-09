@@ -1,1 +1,0 @@
-ALTER TABLE `credential_schema` RENAME COLUMN `minimal_refresh_interval_in_sec` TO `maximum_refresh_interval_in_sec`;
