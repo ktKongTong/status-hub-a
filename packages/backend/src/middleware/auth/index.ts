@@ -5,7 +5,7 @@ import {DrizzleSQLiteAdapter} from "@lucia-auth/adapter-drizzle";
 import {GitHub, Spotify} from "arctic";
 
 import {sessions, users} from "@/db/schema";
-import {db, getDB} from "@/middleware/db";
+import { getDrizzleDB } from "@/middleware/db";
 import {env} from "@/utils/env";
 
 
@@ -25,8 +25,8 @@ interface GitHubOAuthProviderEnv extends Record<string, string> {
   SPOTIFY_CLIENT_SECRET: string
   SPOTIFY_CLIENT_ID: string
 }
-
-const adapter = new DrizzleSQLiteAdapter(db, sessions, users);
+// auth adapter
+const adapter = new DrizzleSQLiteAdapter(getDrizzleDB(), sessions, users);
 const github = new GitHub(env("GITHUB_CLIENT_ID"), env("GITHUB_CLIENT_SECRET"), env("GITHUB_REDIRECT_URL"));
 const spotify = new Spotify(env("SPOTIFY_CLIENT_ID"), env("SPOTIFY_CLIENT_SECRET"), env("SPOTIFY_REDIRECT_URL"));
 const lucia = new Lucia(adapter, {

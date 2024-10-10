@@ -12,6 +12,11 @@ export const pat: PlatformCredential = {
       type: 'string',
       isRequired: true,
       description: 'PAT token'
+    },
+    username: {
+      type: 'string',
+      isRequired: true,
+      description: 'username'
     }
   }
 }

@@ -9,18 +9,18 @@
   "files": [
     "package.json",
     "src",
-    "lib"
+    "dist"
   ],
   "exports": {
     "./models": {
-      "default": "./lib/models/index.js",
-      "types": "./lib/models/index.d.ts",
-      "import": "./lib/models/index.js"
+      "default": "./dist/models/index.js",
+      "types": "./dist/models/index.d.ts",
+      "import": "./dist/models/index.js"
     },
     "./utils": {
-      "default": "./lib/utils/index.js",
-      "types": "./lib/utils/index.d.ts",
-      "import": "./lib/utils/index.js"
+      "default": "./dist/utils/index.js",
+      "types": "./dist/utils/index.d.ts",
+      "import": "./dist/utils/index.js"
     }
   },
   "dependencies": {

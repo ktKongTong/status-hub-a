@@ -2,8 +2,11 @@ import {Context} from "hono";
 
 import dotenv from 'dotenv'
 dotenv.config();
-export const isDebug = () => process.env.DEBUG === 'true'
-export const isProd = (c?:Context) => process.env.NODE_ENV === 'production'
+
+let envs = process.env
+
+export const isDebug = () => envs.DEBUG === 'true'
+export const isProd = (c?:Context) => envs.NODE_ENV === 'production'
 
 
 type EnvType = boolean | string | number

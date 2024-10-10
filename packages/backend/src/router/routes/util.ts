@@ -3,7 +3,7 @@ import {getDB} from "@/middleware/db";
 import {getSession} from "@/middleware/auth";
 import {buildCredentialValues} from "@/utils/credential";
 import {NotFoundError} from "@/errors";
-import {CredentialType} from "../../interface";
+import {CredentialType} from "@/interface";
 import { Credential } from "status-hub-shared/models";
 
 export async function getCredential<T>(c:Context, platform: string) {

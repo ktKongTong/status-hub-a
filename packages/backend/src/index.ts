@@ -1,6 +1,6 @@
 
 import { serve } from '@hono/node-server'
-import {dao, db, DBMiddleware, getDB} from "@/middleware/db"
+import {DBMiddleware, getDrizzleDB} from "@/middleware/db"
 import {getSession, luciaMiddleware, sessionMiddleware, verifyMiddleware} from "@/middleware/auth";
 import loggerMiddleware from '@/middleware/logger';
 
@@ -86,7 +86,7 @@ app.onError((err, c)=> {
       return c.json({error: '服务器内部错误'}, 500);
   }
 })
-initSystemSchemas(sysCredentialSchemas).then(res => {
+initSystemSchemas(getDrizzleDB(),sysCredentialSchemas).then(res => {
   console.log("sys schema init success")
 })
 initSchedule()

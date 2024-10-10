@@ -37,3 +37,4 @@ packages/frontend/.drizzle.env
 docker-compose.local.yml
 sqlite.db
 .env.docker
+.idea

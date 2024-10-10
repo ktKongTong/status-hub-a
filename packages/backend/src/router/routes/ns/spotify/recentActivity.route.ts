@@ -1,13 +1,13 @@
 import {Context} from "hono";
 import {getCredentialByPlatformAndType} from "../../util";
-import {CredentialType} from "../../../../interface";
+import {CredentialType} from "@/interface";
 import {createSpotifyAPI} from "./spotify";
 
 const handler = async (c:Context) => {
   const before = c.req.query('before')
   const credentials = await getCredentialByPlatformAndType(c, 'steam', ['apiToken'])
   const credential = credentials[0].credentialValues
-  const token = credential.accessToken
+  const token = credential.accessToken as string
   const api = createSpotifyAPI(token)
   const recentTracks = await api.getRecentTracks(10)
   const spotifyActivities = recentTracks.map((recentTrack: any) => ({

@@ -3,7 +3,7 @@
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "outDir": "lib",
+    "outDir": "dist",
     "declaration": true,
     "sourceMap": true,
     "strict": true,
@@ -15,6 +15,7 @@
       "@/*": ["./src/*"]
     }
   },
+  "include": ["src/**/*.ts"],
   "exclude": ["node_modules"],
   "tsc-alias": {
     "resolveFullPaths": true

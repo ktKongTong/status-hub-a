@@ -1,16 +1,16 @@
 import {SystemSchemaInsert} from "@/interface";
-import {db} from "@/middleware/db";
 import {credentialSchema, credentialSchemaFields} from "./schema";
 import {and, eq, getTableColumns, SQL, sql} from "drizzle-orm";
 import {SQLiteTable} from "drizzle-orm/sqlite-core";
+import {BetterSQLite3Database} from "drizzle-orm/better-sqlite3";
 
-export const initSystemSchemas = async (schemas:SystemSchemaInsert[]) => {
+export const initSystemSchemas = async (db:BetterSQLite3Database,schemas:SystemSchemaInsert[]) => {
   for await (const schema of schemas) {
-    await initSystemSchema(schema)
+    await initSystemSchema(db, schema)
   }
 }
 
-const initSystemSchema = async (sysSchema: SystemSchemaInsert) => {
+const initSystemSchema = async (db:BetterSQLite3Database, sysSchema: SystemSchemaInsert) => {
   await db.transaction(async tx => {
     // schema.schema.
     const schema = sysSchema.schema

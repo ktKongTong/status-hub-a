@@ -20,6 +20,11 @@ export const apikey: PlatformCredential = {
   }
 }
 
+export interface SteamAPIKeyCredential {
+  apiKey: string,
+  steamid?: string
+}
+
 // provider credentials need refresh
 // return updated credentials
 // export const refreshMethod = (ctx)=> {

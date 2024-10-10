@@ -11,6 +11,8 @@ import {getCurrentPath} from "status-hub-shared/utils";
 import path from "node:path";
 import fs from "node:fs";
 import {Context, Hono} from "hono";
+
+// see rsshub registry.ts
 let modules: Record<string, { namespace: Namespace }> = {};
 
 const __dirname = getCurrentPath(import.meta.url);
@@ -24,7 +26,7 @@ switch (process.env.NODE_ENV) {
       namespaces = JSON.parse(fs.readFileSync(path.join(__dirname, "../assets/build/routes.json")).toString());
     // namespaces = await import('../assets/build/routes.json', { assert: { type: "json" }});
     //@ts-ignore
-    console.log("namespaces", namespaces);
+    // console.log("namespaces", namespaces);
     break;
   default:
     modules = directoryImport({
@@ -93,13 +95,12 @@ Object.keys(namespaces)
     Object.keys(ns.routes).map(p => {
       const r = ns.routes[p]
       const wrappedHandler = async (ctx:Context) => {
-        if (!ctx.get('data')) {
           if (typeof r.handler !== 'function') {
-            const { route } = await import(`./router/routes/ns/${namespace}/${r.location}`);
+            const location = r.location.replace(/\.ts$/,'.js')
+            const { route } = await import(`./router/routes/ns/${namespace}/${location}`);
             r.handler = route.handler;
           }
-          ctx.set('data', await namespaces[namespace].routes[p].handler(ctx));
-        }
+          return r.handler(ctx)
       };
       h.get(r.path, wrappedHandler)
     })
