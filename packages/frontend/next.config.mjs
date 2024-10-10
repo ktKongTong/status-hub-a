@@ -9,6 +9,7 @@ const __dirname = path.dirname(__filename);
 export default (phase, { defaultConfig }) => {
     return {
         ...defaultConfig,
+        transpilePackages: ['status-hub-shared'],
         reactStrictMode: true,
         swcMinify: true,
         // output: "standalone",
