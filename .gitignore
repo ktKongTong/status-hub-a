@@ -38,3 +38,4 @@ docker-compose.local.yml
 sqlite.db
 .env.docker
 .idea
+.vercel
