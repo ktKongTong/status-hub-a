@@ -5,7 +5,7 @@ import {createSpotifyAPI} from "./spotify";
 
 const handler = async (c:Context) => {
   const before = c.req.query('before')
-  const credentials = await getCredentialByPlatformAndType(c, 'steam', ['apiToken'])
+  const credentials = await getCredentialByPlatformAndType(c, 'spotify', ['oauth'])
   const credential = credentials[0].credentialValues
   const token = credential.accessToken as string
   const api = createSpotifyAPI(token)
