@@ -14,12 +14,12 @@
   "exports": {
     "./models": {
       "default": "./lib/models/index.js",
-      "types": "./src/models/index.ts",
+      "types": "./lib/models/index.d.ts",
       "import": "./lib/models/index.js"
     },
     "./utils": {
       "default": "./lib/utils/index.js",
-      "types": "./src/utils/index.ts",
+      "types": "./lib/utils/index.d.ts",
       "import": "./lib/utils/index.js"
     }
   },

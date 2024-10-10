@@ -1,10 +1,10 @@
 import {Context} from "hono";
-import {getCredentialByPlatformAndType} from "../../util";
 import {createSteamAPI} from "./steam";
 import {CredentialType} from "../../../../interface";
 
 const handler = async (c:Context) => {
   const steamid = c.req.param('id')
+  const {getCredentialByPlatformAndType} = await import('../../util')
   const credentials = await getCredentialByPlatformAndType(c, 'steam', ['apiToken'])
   const credential = credentials[0].credentialValues
   const apikey = credential.apikey
@@ -14,7 +14,7 @@ const handler = async (c:Context) => {
   return c.json(res)
 }
 
-export const steamRecentGameRoute =  {
+export const route =  {
   path: '/recent',
   raw: true,
   usableCredentialType: ['apiToken'] as CredentialType[],

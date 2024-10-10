@@ -1,10 +1,10 @@
 import {Context} from "hono";
-import {getCredentialByPlatformAndType} from "../../util";
-import {CredentialType} from "../../../../interface";
+import {CredentialType} from "@/interface";
 import {createGitHubAPI} from "./github";
 import {convertGitHubEvent} from "./utils";
 
 const handler = async (c:Context) => {
+  const {getCredentialByPlatformAndType} = await import('../../util')
   const credentials = await getCredentialByPlatformAndType(c, 'github', ['apiToken'])
   const credential = credentials[0].credentialValues
   const api =  createGitHubAPI(credential.token ?? credential.accessToken!)
@@ -13,7 +13,7 @@ const handler = async (c:Context) => {
   return c.json(recentGitHubEvent)
 }
 
-export const githubRecentActivityRoute =  {
+export const route =  {
   path: '/activity/recent',
   raw: true,
   usableCredentialType: ['apiToken'] as CredentialType[],

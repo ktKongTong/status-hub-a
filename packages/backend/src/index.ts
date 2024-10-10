@@ -51,19 +51,12 @@ app
     (c) => c.json({data: 'pong'})
   )
 
-import {namespaces, sysSchemas} from '@/route-registry'
-import {Hono} from "hono"
+import { sysSchemas ,nsRouter } from '@/route-registry'
+
 import {initSystemSchemas} from "@/db/initial";
 
-Object.keys(namespaces)
-.forEach(namespace => {
-  const ns = namespaces[namespace]
-  let h = new Hono().basePath(`/api/route/${ns.platform}`)
-  h = ns.routes.reduce((acc,cur) => acc.get(cur.path, cur.handler), h)
-  app.route(`/`, h)
-})
-
 const sysCredentialSchemas = Object.keys(sysSchemas).map(sysSchemaKey => sysSchemas[sysSchemaKey])
+
 
 
 
@@ -75,6 +68,7 @@ app
 //still not openapi route now
 .route('/', routes)
 .route('/', bulLBoardRouter)
+.route('/', nsRouter)
 // openapi
 .doc('/api/openapi.json', {
   openapi: '3.0.0',

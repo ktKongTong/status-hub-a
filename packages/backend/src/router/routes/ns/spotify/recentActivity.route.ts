@@ -23,7 +23,7 @@ const handler = async (c:Context) => {
   return c.json(spotifyActivities)
 }
 
-export const spotifyRecentActivityRoute =  {
+export const route =  {
   path: '/activity/recent',
   raw: true,
   usableCredentialType: ['oauth'] as CredentialType[],

@@ -1,7 +1,5 @@
 import {  Namespace } from "@/interface";
-import {apikey} from "./credentials";
-import {steamRecentActivityRoute} from "./recentActivity";
-import {steamRecentGameRoute} from "./recentGame";
+import {apikey} from "./apikey.v1.cr";
 
 interface SteamCredential {
     apikey: string;
@@ -13,5 +11,4 @@ export const namespace: Namespace = {
   platform: 'steam',
   category: ['game'],
   supportCredentials: [apikey],
-  routes: [steamRecentActivityRoute, steamRecentGameRoute]
 }

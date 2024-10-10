@@ -19,3 +19,9 @@ export const apikey: PlatformCredential = {
     }
   }
 }
+
+// provider credentials need refresh
+// return updated credentials
+// export const refreshMethod = (ctx)=> {
+//
+// }

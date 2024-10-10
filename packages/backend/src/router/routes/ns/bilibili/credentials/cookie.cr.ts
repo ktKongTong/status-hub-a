@@ -1,6 +1,6 @@
 import {  PlatformCredential } from "@/interface";
 
-export const Cookie: PlatformCredential = {
+export const CookieCr: PlatformCredential = {
   // 只在 fields 更改时变化
   platform: "bilibili",
   version: 1,

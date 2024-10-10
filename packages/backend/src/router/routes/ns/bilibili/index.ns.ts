@@ -1,7 +1,6 @@
 
 import {CredentialType, Namespace} from "@/interface";
-import {Cookie} from "./credentials/cookie";
-import {getCredentialByPlatformAndType} from "../../util";
+import {CookieCr} from "./credentials/cookie.cr";
 import {Context} from "hono";
 
 
@@ -10,6 +9,7 @@ interface BiliCookie {
 }
 
 const handler = async (c:Context) => {
+  const {getCredentialByPlatformAndType} = await import('../../util')
   const credentials = await getCredentialByPlatformAndType(c, 'bilibili', ['cookie'])
   const credential = credentials[0].credentialValues
   const headers = new Headers();
@@ -23,7 +23,7 @@ const handler = async (c:Context) => {
   return c.json(data)
 }
 
-const biliHistoryRoute =  {
+const route =  {
   path: '/recent',
   raw: true,
   usableCredentialType: ['cookie'] as CredentialType[],
@@ -33,6 +33,6 @@ const biliHistoryRoute =  {
 export const namespace: Namespace = {
   platform: 'bilibili',
   category: ['video'],
-  supportCredentials: [Cookie],
-  routes: [biliHistoryRoute]
+  supportCredentials: [CookieCr],
+  // routes: [route]
 }
