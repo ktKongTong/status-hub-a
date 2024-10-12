@@ -21,7 +21,6 @@ export const CurrentUserSchema = z
 export const TokenSelectSchema  = z.object({
   userId: z.string(),
   identifier: z.string(),
-  // sec 有效期
   expires: z.number(),
   createdAt: z.date(),
   updatedAt: z.date()
@@ -31,6 +30,11 @@ export const TokenCreateResultSchema = TokenSelectSchema.merge(z.object({
   token: z.string()
 }))
 
+export const TokenCreateSchema = z.object({
+  identifier: z.string(),
+  expires: z.number(),
+})
 
+export type TokenInsert = z.infer<typeof TokenCreateSchema>
 export type TokenCreateResult = z.infer<typeof TokenCreateResultSchema>
 export type TokenSelect = z.infer<typeof TokenSelectSchema>

@@ -16,6 +16,7 @@ export interface PlatformCredential {
   credentialType: CredentialType;
   autoRefreshable: boolean;
   maximumRefreshIntervalInSec?: number;
+  description: string;
   // a user defined script?
   refreshLogic?: string;
   availablePermissions?: string[],
@@ -60,6 +61,7 @@ export const generateCredentialSchemaAndFieldsFromPlatformCredential = (c : Plat
     schemaVersion: c.version,
     credentialType: c.credentialType,
     autoRefreshable: c.autoRefreshable,
+    description: c.description,
     maximumRefreshIntervalInSec: c.maximumRefreshIntervalInSec ?? 0,
     available: true,
     availablePermissions: c.availablePermissions?.join(",") ?? '',

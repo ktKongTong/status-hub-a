@@ -1,0 +1,1 @@
+ALTER TABLE `credential_schema` ADD `description` text DEFAULT '' NOT NULL;

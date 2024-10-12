@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX `verificationToken_identifier_userId_unique` ON `verificationToken` (`identifier`,`userId`);

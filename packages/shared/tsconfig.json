@@ -6,6 +6,7 @@
     "outDir": "dist",
     "declaration": true,
     "sourceMap": true,
+    "rootDir": "./src",
     "strict": true,
     "skipLibCheck": true,
     "lib": [
@@ -16,7 +17,7 @@
     }
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "dist"],
   "tsc-alias": {
     "resolveFullPaths": true
   }

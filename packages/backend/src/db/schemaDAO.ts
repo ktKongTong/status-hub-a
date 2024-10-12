@@ -87,7 +87,7 @@ export class SchemaDAO implements ISchemaDAO {
                 platform: schema.platform,
                 credentialType: schema.credentialType,
                 autoRefreshable: schema.autoRefreshable,
-                refreshLogicType: schema.refreshLogicType,
+                refreshLogicType: 'script' as const,
                 available: schema.available,
                 availablePermissions: schema.availablePermissions,
                 permissions: schema.permissions,
@@ -149,7 +149,7 @@ export class SchemaDAO implements ISchemaDAO {
                     availablePermissions: schema.availablePermissions || currentSchema[0].availablePermissions,
                     permissions: schema.permissions || currentSchema[0].permissions,
                     autoRefreshable: schema.autoRefreshable,
-                    refreshLogicType: schema.refreshLogicType,
+                    refreshLogicType: 'script',
                 }).returning();
 
                 const newSchemaFields = schema.schemaFields.map(field => ({
@@ -158,11 +158,18 @@ export class SchemaDAO implements ISchemaDAO {
                     schemaId: schemaId,
                     schemaVersion: newSchema[0].schemaVersion
                 }));
-                // new schema fields                
-                const newest = await tx.insert(tables.credentialSchemaFields).values(newSchemaFields).returning();
+                // new schema fields
+                if(newSchemaFields.length > 0) {
+                    const newest = await tx.insert(tables.credentialSchemaFields).values(newSchemaFields).returning();
+                    return {
+                        ...newSchema[0],
+                        schemaFields: newest
+                    };
+                }
+
                 return {
                     ...newSchema[0],
-                    schemaFields: newest
+                    schemaFields: []
                 };
             }
             // 如果字段没有变化，只更新其他属性
@@ -174,7 +181,6 @@ export class SchemaDAO implements ISchemaDAO {
                     availablePermissions: schema.availablePermissions,
                     permissions: schema.permissions,
                     autoRefreshable: schema.autoRefreshable,
-                    refreshLogicType: schema.refreshLogicType,
                 })
                 .where(eq(tables.credentialSchema.id, schemaId))
                 .returning();
@@ -226,6 +232,7 @@ export class SchemaDAO implements ISchemaDAO {
             platform: row.schema.platform,
             credentialType: row.schema.credentialType,
             schemaVersion: row.schema.schemaVersion,
+            description: row.schema.description,
             available: row.schema.available,
             permissions: row.schema.permissions,
             availablePermissions: row.schema.availablePermissions,

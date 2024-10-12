@@ -5,13 +5,13 @@ import { sqliteTable, text, integer, primaryKey, foreignKey } from 'drizzle-orm/
 export const credentialSchema = sqliteTable('credential_schema', {
     id: text('id').notNull(),
     schemaVersion: integer('schema_version').notNull().default(1),
-
     platform: text('platform').notNull(),
     credentialType: text('credential_type').notNull(),
     available: integer('available', { mode: 'boolean' }).notNull().default(true),
     autoRefreshable: integer('auto_refreshable', { mode: 'boolean' }).notNull().default(false),
     refreshLogicType: text('refresh_logic_type', {enum: ['system', 'script']}).notNull().default('script'),
     // remove refreshLogic in query
+    description: text('description').notNull().default(""),
     refreshLogic: text('refresh_logic'),
     maximumRefreshIntervalInSec: integer('maximum_refresh_interval_in_sec').notNull().default(0),
     availablePermissions: text('available_permissions').notNull(),

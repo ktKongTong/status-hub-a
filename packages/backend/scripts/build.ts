@@ -1,7 +1,7 @@
 import { namespaces } from '@/route-registry';
 import fs from 'node:fs';
 import path from 'node:path';
-import {getCurrentPath} from "status-hub-shared/utils";
+import {getCurrentPath} from "@/utils/path";
 import {execSync} from "node:child_process";
 
 const __dirname = getCurrentPath(import.meta.url);

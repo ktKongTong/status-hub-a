@@ -7,7 +7,7 @@ import {
 } from "./interface";
 
 import {directoryImport} from "directory-import";
-import {getCurrentPath} from "status-hub-shared/utils";
+import {getCurrentPath} from "@/utils/path";
 import path from "node:path";
 import fs from "node:fs";
 import {Context, Hono} from "hono";

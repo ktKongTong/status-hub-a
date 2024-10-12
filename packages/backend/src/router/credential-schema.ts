@@ -3,6 +3,7 @@ import { NotFoundError } from "@/errors";
 import { OpenAPIHono, z } from "@hono/zod-openapi";
 import R from '@/utils/openapi'
 import {
+  CredentialSchemaInsertSchema,
   CredentialSchemaOpenAPISchema,
   CredentialSchemaUpdateOpenApiSchema,
 } from "status-hub-shared/models";
@@ -22,11 +23,12 @@ credentialSchemaRouter.openapi(
 credentialSchemaRouter.openapi(
   R
   .post('/api/credential-schema')
+  .reqBodySchema(CredentialSchemaInsertSchema)
   .respBodySchema(CredentialSchemaOpenAPISchema)
-  .buildOpenAPI('create new Credential Schema')
+  .buildOpenAPIWithReqBody('create new Credential Schema')
   , async (c) => {
     const {dao: db} = getDB(c)
-    const body = await c.req.json()
+    const body = c.req.valid('json')
     const newSchema = await db.schemaDAO.createCredentialSchema(body)
     return c.json(newSchema)
 })
@@ -60,7 +62,7 @@ credentialSchemaRouter.openapi(
   .buildOpenAPIWithReqBody('update credential schema, actually create a new version')
   , async (c) => {
   const {dao: db} = getDB(c)
-    const id = c.req.param('id')
+  const id = c.req.param('id')
   const body = c.req.valid('json')
   const updatedSchema = await db.schemaDAO.updateCredentialSchema(body)
   return c.json(updatedSchema)

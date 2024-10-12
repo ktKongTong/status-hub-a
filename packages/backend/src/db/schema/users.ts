@@ -1,4 +1,4 @@
-import {integer, primaryKey, sqliteTable, text} from "drizzle-orm/sqlite-core";
+import {integer, primaryKey, sqliteTable, text, unique, uniqueKeyName} from "drizzle-orm/sqlite-core";
 import {z} from "zod";
 import {createInsertSchema, createSelectSchema} from "drizzle-zod";
 import {sql} from "drizzle-orm";
@@ -65,6 +65,7 @@ export const verificationTokens = sqliteTable(
     compositePk: primaryKey({
       columns: [verificationToken.identifier, verificationToken.token],
     }),
+    unq: unique().on(verificationToken.identifier, verificationToken.userId)
   })
 )
 

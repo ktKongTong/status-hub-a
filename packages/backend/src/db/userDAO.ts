@@ -4,7 +4,7 @@ import {
   UserAccountInsert,
   UserAccountSelect, UserAndTokenSelect,
   users,
-  UserSelect,
+  UserSelect, UserTokenCreateResult,
   UserTokenInsert, UserTokenSelect,
   verificationTokens
 } from "./schema";
@@ -14,10 +14,12 @@ export interface IUserDAO {
   getUserByAccountId(provider: string, platformId: string): Promise<UserAccountSelect | null>;
   createNewUser(values: UserAccountInsert): Promise<UserAccountSelect | null>;
   getUserByUserId(userId: string): Promise<UserSelect | null>;
-  createUserToken(token: UserTokenInsert): Promise<UserTokenSelect>;
+  createUserToken(token: UserTokenInsert): Promise<UserTokenCreateResult>;
   getUserTokensByUserId(userId: string):Promise<UserTokenSelect[]>;
   getUserAndTokenByToken(token: string): Promise<UserAndTokenSelect | null>;
+  checkIfTokenIdentifierExist(identifier: string,userId: string): Promise<boolean>;
   removeToken(token: string, userId: string): Promise<boolean>;
+  removeTokenByIdentifier(identifier: string, userId: string): Promise<boolean>;
 }
 
 export class UserDAO implements IUserDAO {
@@ -58,7 +60,7 @@ export class UserDAO implements IUserDAO {
     return res[0] ?? null
   }
 
-  async createUserToken(token: UserTokenInsert): Promise<UserTokenSelect> {
+  async createUserToken(token: UserTokenInsert): Promise<UserTokenCreateResult> {
     const res = await this.db.insert(verificationTokens).values(token).returning()
     return res[0]
   }
@@ -70,7 +72,13 @@ export class UserDAO implements IUserDAO {
   async getUserAndTokenByToken(token: string): Promise<UserAndTokenSelect | null> {
     const res = await this.db.select({
       user: users,
-      token: verificationTokens
+      token: {
+        identifier: verificationTokens.identifier,
+        userId: verificationTokens.userId,
+        expires: verificationTokens.expires,
+        createdAt: verificationTokens.createdAt,
+        updatedAt: verificationTokens.updatedAt,
+      }
     }).from(verificationTokens)
       .innerJoin(users, eq(users.id, verificationTokens.userId))
       .where(and(
@@ -80,10 +88,24 @@ export class UserDAO implements IUserDAO {
 
     return res[0] ?? null
   }
-
+  async checkIfTokenIdentifierExist(identifier: string,userId: string): Promise<boolean> {
+    const res = await this.db.select().from(verificationTokens).where(and(
+      eq(verificationTokens.identifier, identifier),
+      eq(verificationTokens.userId, userId)
+    )).execute()
+    return res.length > 0
+  }
   async removeToken(token: string,userId: string): Promise<boolean> {
     const res = await this.db.delete(verificationTokens).where(and(
       eq(verificationTokens.token, token),
+      eq(verificationTokens.userId, userId)
+    ))
+    return res.changes > 0
+  }
+
+  async removeTokenByIdentifier(identifier: string,userId: string): Promise<boolean> {
+    const res = await this.db.delete(verificationTokens).where(and(
+      eq(verificationTokens.identifier, identifier),
       eq(verificationTokens.userId, userId)
     ))
     return res.changes > 0

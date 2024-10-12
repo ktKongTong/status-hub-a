@@ -2,7 +2,7 @@ import {z} from "@hono/zod-openapi";
 import { generateMock } from '@anatine/zod-mock';
   
 export const SchemaFieldSelectSchema = z.object({
-    fieldName: z.string(),
+    fieldName: z.string().min(1, {message:'字段名称不可为空'}),
     fieldType: z.enum(['string', 'number' , 'boolean']),
     isRequired: z.boolean(),
     description: z.string(),
@@ -17,14 +17,19 @@ export const CredentialSchemaFieldOpenApiSchema = SchemaFieldSelectSchema
 
 export const CredentialSchemaUpdateSchema = z.object({
     id: z.string(),
-    platform: z.string(),
-    credentialType: z.string(),
+    platform: z.string().max(10).regex(/^[a-zA-Z0-9_-]+$/, {message : '仅可包含字母、数字、\'_\'以及\'-\''}),
+    credentialType: z.string().max(10).regex(/^[a-zA-Z0-9_-]+$/, {message : '仅可包含字母、数字、\'_\'以及\'-\''}),
+    autoRefreshable: z.boolean().default(false),
+    description: z.string(),
+    maximumRefreshIntervalInSec: z.number().default(3600).refine((val) => {
+        return val == 0 || val >= 3600
+    }, { message: "刷新间隔最少为 1h（仅当自动刷新不可用时可为0）" }),
     available: z.boolean(),
     permissions: z.string().optional(),
     availablePermissions: z.string().optional(),
-    autoRefreshable: z.boolean(),
-    refreshLogicType: z.enum(['system', 'script']),
-    schemaFields: z.array(CredentialSchemaFieldOpenApiSchema),
+    schemaFields: z.array(CredentialSchemaFieldOpenApiSchema).min(1, {
+        message: "至少需要一个字段"
+    }),
 })
 
 export const CredentialSchemaUpdateOpenApiSchema = CredentialSchemaUpdateSchema
@@ -32,7 +37,9 @@ export const CredentialSchemaUpdateOpenApiSchema = CredentialSchemaUpdateSchema
       example: generateMock(CredentialSchemaUpdateSchema)
   })
 
-export const CredentialSchemaInsertSchema = CredentialSchemaUpdateSchema.omit({ id:true }).merge(z.object({
+export const CredentialSchemaInsertSchema = CredentialSchemaUpdateSchema
+  .omit({ id:true })
+  .merge(z.object({
     permissions: z.string(),
     availablePermissions: z.string(),
 }))
@@ -51,11 +58,8 @@ export const CredentialSchemaSelectItemSchema = z.object({
     autoRefreshable: z.boolean(),
     refreshLogicType: z.enum(['system', 'script']).default('system'),
     refreshLogic: z.string().optional().nullish(),
+    description: z.string().default(''),
     maximumRefreshIntervalInSec: z.number(),
-    // autoRefreshable: integer('auto_refreshable', { mode: 'boolean' }).notNull().default(false),
-    // refreshLogicType: text('refresh_logic_type', {enum: ['system', 'script']}).notNull().default('script'),
-    // // remove refreshLogic in query
-    // refreshLogic: text('refresh_logic'),
     createdBy: z.enum(['system', 'user']),
     createdAt: z.date(),
     updatedAt: z.date(),

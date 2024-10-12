@@ -6,6 +6,7 @@ export const oauthToken: PlatformCredential = {
   version: 1,
   credentialType: 'oauth',
   autoRefreshable: true,
+  description: "Spotify 基于 OAuth 的凭证验证， accessToken 有效期 1h，可定时刷新。参见:https://developer.spotify.com/documentation/web-api/concepts/authorization",
   maximumRefreshIntervalInSec: 3600,
   fields: {
     accessToken: {

@@ -5,6 +5,7 @@ export const pat: PlatformCredential = {
   platform: "github",
   version: 1,
   credentialType: 'apiToken',
+  description: "GitHub 的 PAT",
   autoRefreshable: false,
   maximumRefreshIntervalInSec: 0,
   fields: {

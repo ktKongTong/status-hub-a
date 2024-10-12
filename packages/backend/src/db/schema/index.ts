@@ -27,9 +27,13 @@ export type UserAccountSelect = {
 }
 
 const insertUserTokenSchema = createInsertSchema(verificationTokens);
-const selectUserTokenSchema = createSelectSchema(verificationTokens);
+const createUserTokenResultSchema = createSelectSchema(verificationTokens)
+const selectUserTokenSchema = createUserTokenResultSchema.omit({token: true});
+
+
 export type UserTokenInsert = typeof verificationTokens.$inferInsert
-export type UserTokenSelect = typeof verificationTokens.$inferSelect
+export type UserTokenSelect = z.infer<typeof selectUserTokenSchema>
+export type UserTokenCreateResult = z.infer<typeof createUserTokenResultSchema>
 export type UserAndTokenSelect = {
   user: UserSelect,
   token: UserTokenSelect

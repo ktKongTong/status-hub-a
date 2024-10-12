@@ -8,6 +8,20 @@
       "when": 1728486941600,
       "tag": "0000_heavy_mattie_franklin",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1728720067554,
+      "tag": "0001_strong_luke_cage",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1728724253788,
+      "tag": "0002_complete_princess_powerful",
+      "breakpoints": true
     }
   ]
 }

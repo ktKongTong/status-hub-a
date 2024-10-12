@@ -24,6 +24,7 @@ const initSystemSchema = async (db:BetterSQLite3Database, sysSchema: SystemSchem
       available: schema.available,
       autoRefreshable: schema.autoRefreshable,
       refreshLogicType: schema.refreshLogicType ,
+      description: schema.description,
       refreshLogic: '',
       maximumRefreshIntervalInSec: schema.maximumRefreshIntervalInSec,
       availablePermissions: schema.availablePermissions,
@@ -34,7 +35,7 @@ const initSystemSchema = async (db:BetterSQLite3Database, sysSchema: SystemSchem
     await tx.insert(credentialSchema).values(v)
       .onConflictDoUpdate({
       target: [credentialSchema.schemaVersion, credentialSchema.id],
-      set: buildConflictUpdateColumns(credentialSchema, ['available', 'autoRefreshable','updatedAt', 'availablePermissions', 'permissions','maximumRefreshIntervalInSec', 'refreshLogicType', 'refreshLogic']),
+      set: buildConflictUpdateColumns(credentialSchema, ['available', 'autoRefreshable','updatedAt', 'availablePermissions', 'permissions','maximumRefreshIntervalInSec', 'refreshLogicType', 'refreshLogic', 'description']),
     }).execute()
     await tx.delete(credentialSchemaFields).where(and(eq(credentialSchemaFields.schemaId, schema.id),eq(credentialSchemaFields.schemaVersion, schema.schemaVersion)))
       .execute()

@@ -25,7 +25,7 @@ export class UnauthorizedError extends BizError {
 }
 
 export class InvalidParamError extends BizError {
-  status: StatusCode = 400
+  status: StatusCode = 422
   name = 'InvalidParamError'
   constructor(message?: string) {
     super(message);

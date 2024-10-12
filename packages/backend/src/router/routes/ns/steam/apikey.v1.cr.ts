@@ -6,6 +6,7 @@ export const apikey: PlatformCredential = {
   version: 1,
   credentialType: 'apiToken',
   autoRefreshable: false,
+  description: "steam 的 APIKey 参见 https://steamcommunity.com/dev/apikey",
   fields: {
     apiKey: {
       type: 'string',
