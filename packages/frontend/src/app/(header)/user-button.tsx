@@ -15,16 +15,18 @@ import { useRouter } from 'next/navigation'
 
 export default function UserButton() {
 
-  const { logged,
+  const {
+    logged,
     avatar,
-    name } = useSession()
-  const route = useRouter()
+    loginMutation,
+    logoutMutation,
+    name
+  } = useSession()
+
   return (
     <>
       {!logged ? (
-          <Button onClick={() => {
-            route.push('/api/auth/login/github')
-          }}>Sign In</Button>
+          <Button onClick={loginMutation}>Sign In</Button>
         ) :
         (<DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -48,7 +50,7 @@ export default function UserButton() {
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuItem>
-                <Button variant="ghost" className="w-full p-0" onClick={() => route.push('/api/auth/logout') }>
+                <Button variant="ghost" className="w-full p-0" onClick={logoutMutation}>
                   Sign Out
                 </Button>
               </DropdownMenuItem>

@@ -5,10 +5,10 @@ import React from "react";
 import {z} from "zod";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {TokenCreateResultSchema, TokenCreateSchema} from "status-hub-shared/models";
+import { TokenCreateSchema } from "status-hub-shared/models";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
-import {useCreateToken} from "@/hooks/use-tokens";
 import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
+import {convertShortStrToTime, convertTimeToShortStr} from "@/app/(management)/token/sec-converter";
 const validFormSchema = TokenCreateSchema
 interface TokenCreateFormProps {
   onConfirm: (v: z.infer<typeof validFormSchema>)=> void,
@@ -35,12 +35,7 @@ const TokenCreateForm = (props:TokenCreateFormProps)=> {
       expires: 30 * 24 * 3600
     }
   })
-  const convertTimeToShortStr = (time: number)=> {
-    return '30d'
-  }
-  const convertShortStrToTime = (str: string)=> {
-    return 30 * 24 * 3600
-  }
+
   return (
     <Dialog open={open} onOpenChange={() => setOpen(s=>!s)}>
       <DialogTrigger asChild>

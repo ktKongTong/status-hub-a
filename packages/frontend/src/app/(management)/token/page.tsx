@@ -10,6 +10,7 @@ import {z} from "zod";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import DeleteConfirmFormDialog from "@/components/delete-confirm-form-dialog";
 import {ClipboardPaste, CopyIcon} from "lucide-react";
+import {convertTimeToShortStr} from "@/app/(management)/token/sec-converter";
 
 export default function Home() {
   const [curToken, setCurToken] = useState<string|null>(null)
@@ -58,7 +59,7 @@ export default function Home() {
               data?.map(token => (
                 <TableRow key={token.identifier} className="p-4">
                   <TableCell>{token.identifier}</TableCell>
-                  <TableCell>{token.expires}</TableCell>
+                  <TableCell>{convertTimeToShortStr(token.expires)}</TableCell>
                   <TableCell>{token.createdAt.toString()}</TableCell>
                   <TableCell>
                   <DeleteConfirmFormDialog verifyInput={token.identifier} title={"删除Token"} onConfirm={()=>tokenDeleter.mutate(token.identifier)}/>
