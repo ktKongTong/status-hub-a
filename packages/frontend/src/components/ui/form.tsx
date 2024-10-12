@@ -14,6 +14,7 @@ import {
 
 import { cn } from "@/lib/utils"
 import { Label } from "@/components/ui/label"
+import {useId} from "react";
 
 const Form = FormProvider
 
@@ -57,6 +58,22 @@ const useFormField = () => {
   return {
     id,
     name: fieldContext.name,
+    formItemId: `${id}-form-item`,
+    formDescriptionId: `${id}-form-item-description`,
+    formMessageId: `${id}-form-item-message`,
+    ...fieldState,
+  }
+}
+
+
+const useNamedFormField = (name: string) => {
+  const { getFieldState, formState } = useFormContext()
+
+  const fieldState = getFieldState(name, formState)
+  const id = useId()
+  return {
+    id: id,
+    name: name,
     formItemId: `${id}-form-item`,
     formDescriptionId: `${id}-form-item-description`,
     formMessageId: `${id}-form-item-message`,
@@ -166,6 +183,34 @@ const FormMessage = React.forwardRef<
 })
 FormMessage.displayName = "FormMessage"
 
+
+const NamedFormMessage = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLParagraphElement> & {name: string}
+>(({ className, children, ...props }, ref) => {
+  const { error, formMessageId } = useNamedFormField(props.name)
+  if((error as any)?.['length']) {
+    return null
+  }
+  const body = error ? String(error?.message ?? error?.root?.message) : children
+
+  if (!body) {
+    return null
+  }
+
+  return (
+    <p
+      ref={ref}
+      id={formMessageId}
+      className={cn("text-[0.8rem] font-medium text-destructive", className)}
+      {...props}
+    >
+      {body}
+    </p>
+  )
+})
+
+NamedFormMessage.displayName = "NamedFormMessage"
 export {
   useFormField,
   Form,
@@ -174,5 +219,6 @@ export {
   FormControl,
   FormDescription,
   FormMessage,
+  NamedFormMessage,
   FormField,
 }

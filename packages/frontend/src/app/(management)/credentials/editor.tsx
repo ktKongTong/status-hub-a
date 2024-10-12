@@ -1,12 +1,12 @@
 
 import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog";
-import {Label} from "@/components/ui/label";
+
 import {Input} from "@/components/ui/input";
 import OauthPopup from "@/components/oauth-popup";
 import {Button} from "@/components/ui/button";
 import React from "react";
-import {Credential, SchemaField} from "status-hub-shared/models";
-import {useUpdateCredential} from "@/app/(management)/credentials/query";
+import { Credential } from "status-hub-shared/models";
+import {useUpdateCredential} from "@/hooks/use-credentials";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";

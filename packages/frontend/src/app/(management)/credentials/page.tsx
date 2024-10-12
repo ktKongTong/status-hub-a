@@ -1,7 +1,6 @@
 'use client'
 import React, { useState } from 'react';
-import { useCredentials, useDeleteCredential } from './query';
-import { useCredentialSchemas } from '../schemas/query';
+import { useCredentials, useDeleteCredential } from '@/hooks/use-credentials';
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
@@ -9,12 +8,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Credential } from 'status-hub-shared/models'
 import CredentialEditor from "@/app/(management)/credentials/editor";
 import CredentialCreateForm from "@/app/(management)/credentials/credential-create-form";
+import {useCredentialSchemas} from "@/hooks/use-credential-schemas";
 
 
 export default function CredentialManagement() {
   const { data: credentials, isLoading, error } = useCredentials();
-
-  const { data: schemas } = useCredentialSchemas();
+  const { schemas } = useCredentialSchemas();
   const deleteMutation = useDeleteCredential();
 
 

@@ -3,7 +3,7 @@ import {Button} from "@/components/ui/button";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {Input} from "@/components/ui/input";
 import React, {useState} from "react";
-import {useCreateCredential} from "@/app/(management)/credentials/query";
+import {useCreateCredential} from "@/hooks/use-credentials";
 import {CredentialSchemaSelect} from "status-hub-shared/models";
 import OauthPopup from "@/components/oauth-popup";
 import {z} from "zod";
