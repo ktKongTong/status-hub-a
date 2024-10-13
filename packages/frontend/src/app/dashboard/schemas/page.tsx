@@ -2,10 +2,10 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import CredentialSchemaFormDialog from "@/app/(management)/schemas/credential-schema-form";
+import CredentialSchemaFormDialog from "@/app/dashboard/schemas/credential-schema-form";
 import TableSkeleton from "@/components/table-skelton";
 import {useCredentialSchemas} from "@/hooks/use-credential-schemas";
-import SchemaTableRow from "@/app/(management)/schemas/schema-table-row";
+import SchemaTableRow from "@/app/dashboard/schemas/schema-table-row";
 
 const CredentialSchemaManagement: React.FC = () => {
 

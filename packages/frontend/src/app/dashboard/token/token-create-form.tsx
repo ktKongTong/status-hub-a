@@ -8,7 +8,7 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import { TokenCreateSchema } from "status-hub-shared/models";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
-import {convertShortStrToTime, convertTimeToShortStr} from "@/app/(management)/token/sec-converter";
+import {convertShortStrToTime, convertTimeToShortStr} from "@/app/dashboard/token/sec-converter";
 const validFormSchema = TokenCreateSchema
 interface TokenCreateFormProps {
   onConfirm: (v: z.infer<typeof validFormSchema>)=> void,

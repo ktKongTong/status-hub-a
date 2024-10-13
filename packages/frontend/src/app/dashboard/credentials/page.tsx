@@ -6,8 +6,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 
 
 import { Credential } from 'status-hub-shared/models'
-import CredentialEditor from "@/app/(management)/credentials/editor";
-import CredentialCreateForm from "@/app/(management)/credentials/credential-create-form";
+import CredentialEditor from "@/app/dashboard/credentials/editor";
+import CredentialCreateForm from "@/app/dashboard/credentials/credential-create-form";
 import {useCredentialSchemas} from "@/hooks/use-credential-schemas";
 
 

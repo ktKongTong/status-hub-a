@@ -4,13 +4,13 @@ import React, {useState} from "react";
 import {Button} from "@/components/ui/button";
 import {useCreateToken, useDeleteToken, useTokens} from "@/hooks/use-tokens";
 import SingleFieldFormDialog from "@/components/single-field-form-dialog";
-import TokenCreateForm from "@/app/(management)/token/token-create-form";
+import TokenCreateForm from "@/app/dashboard/token/token-create-form";
 import {TokenCreateSchema} from "status-hub-shared/models";
 import {z} from "zod";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import DeleteConfirmFormDialog from "@/components/delete-confirm-form-dialog";
 import {ClipboardPaste, CopyIcon} from "lucide-react";
-import {convertTimeToShortStr} from "@/app/(management)/token/sec-converter";
+import {convertTimeToShortStr} from "@/app/dashboard/token/sec-converter";
 
 export default function Home() {
   const [curToken, setCurToken] = useState<string|null>(null)

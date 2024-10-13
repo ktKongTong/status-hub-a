@@ -8,7 +8,7 @@ import {
 import {Dialog, DialogContent, DialogTrigger} from "@/components/ui/dialog";
 import {Check, X} from "lucide-react";
 import DeleteConfirmFormDialog from "@/components/delete-confirm-form-dialog";
-import EditableCredentialSchemaDetail from "@/app/(management)/schemas/editable-credential-schema-detail";
+import EditableCredentialSchemaDetail from "@/app/dashboard/schemas/editable-credential-schema-detail";
 
 const SchemaTableRow = ({schema}:{schema: CredentialSchemaSelect}) => {
   const isSystemSchema = schema.createdBy === 'system'

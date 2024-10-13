@@ -9,12 +9,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {useSession} from "@/hooks/query/useSession";
+import React from "react";
+import SignIn from "@/components/auth/sign-in";
 
-import { useRouter } from 'next/navigation'
 
-
-export default function UserButton() {
-
+function UserButton() {
   const {
     logged,
     avatar,
@@ -26,7 +25,7 @@ export default function UserButton() {
   return (
     <>
       {!logged ? (
-          <Button onClick={loginMutation}>Sign In</Button>
+          <SignIn />
         ) :
         (<DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -57,6 +56,8 @@ export default function UserButton() {
             </DropdownMenuContent>
           </DropdownMenu>
         )}
-    </>
+      </>
   )
 }
+
+export default React.memo(UserButton)

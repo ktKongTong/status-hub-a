@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import Provider from "@/components/providers";
-import Header from "@/app/(header)";
+import Header from "@/app/_header";
 import React from "react";
 import {Toaster} from "@/components/ui/toaster";
 
@@ -45,7 +45,6 @@ export default function RootLayout({
       </body>
       </html>
     </Provider>
-
   )
     ;
 }

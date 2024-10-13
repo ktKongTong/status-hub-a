@@ -1,12 +1,13 @@
 import { cn } from "@/lib/utils"
 import { ExternalLink } from "lucide-react"
 import React from "react";
+import Link from "next/link";
 
 interface CustomLinkProps extends React.LinkHTMLAttributes<HTMLAnchorElement> {
   href: string
 }
 
-const Link = ({
+const CustomLink = ({
                       href,
                       children,
                       className,
@@ -17,14 +18,14 @@ const Link = ({
 
   if (isInternalLink || isAnchorLink) {
     return (
-      <a href={href} className={className} {...rest}>
+      <Link href={href} className={className} {...rest}>
         {children}
-      </a>
+      </Link>
     )
   }
 
   return (
-    <a
+    <Link
       href={href}
       target="_blank"
       rel="noopener noreferrer"
@@ -33,8 +34,8 @@ const Link = ({
     >
       {children}
       <ExternalLink className=" ml-0.5 h-4 w-4 inline-block" />
-    </a>
+    </Link>
   )
 }
 
-export default Link
+export default CustomLink
