@@ -1,13 +1,12 @@
 import {OAuth2RequestError, generateState, GitHub} from "arctic";
 import { getCookie, setCookie } from "hono/cookie";
-import { generateId } from "lucia";
 import { Hono } from "hono";
 import {getOAuthProvider, getSession} from "@/middleware/auth";
 import {getDB} from "@/middleware/db";
-import { env } from 'hono/adapter';
 import {UnknownError} from "@/errors";
 import {isProd} from "@/utils/env";
 import {createGitHubAPI} from "@/router/routes/ns/github/github";
+import {createUid} from "@/utils/uid";
 
 export const githubLoginRouter = new Hono().basePath('/api/auth');
 
@@ -51,7 +50,7 @@ githubLoginRouter.get("/login/github/callback", async (c) => {
       return c.redirect("/");
     }
 
-    const userId = generateId(15);
+    const userId = createUid()
 
     await db.userDAO.createNewUser({
       user: {

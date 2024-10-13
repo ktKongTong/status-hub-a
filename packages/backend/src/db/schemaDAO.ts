@@ -11,7 +11,7 @@ import {integer, text} from "drizzle-orm/sqlite-core";
 export interface ISchemaDAO {
     getCredentialSchemas(): Promise<CredentialSchemaSelect[]>;
     getCredentialSchemaById(schemaId: string): Promise<CredentialSchemaSelect | null>;
-    createCredentialSchema(schema: CredentialSchemaInsert): Promise<CredentialSchemaSelect>;
+    createCredentialSchema(schema: CredentialSchemaInsert, userId: string): Promise<CredentialSchemaSelect>;
     updateCredentialSchema(schema: CredentialSchemaUpdate): Promise<CredentialSchemaSelect>;
     deleteCredentialSchema(schemaId: string): Promise<boolean>;
 }
@@ -77,7 +77,7 @@ export class SchemaDAO implements ISchemaDAO {
         return result.length > 0 ? this.mapToCredentialSchema(result[0]) : null;
     }
 
-    async createCredentialSchema(schema: CredentialSchemaInsert): Promise<CredentialSchemaSelect> {
+    async createCredentialSchema(schema: CredentialSchemaInsert,userId: string): Promise<CredentialSchemaSelect> {
         const id = crypto.randomUUID()
         //
         const result = await this.db.transaction(async (tx) => {
@@ -91,7 +91,7 @@ export class SchemaDAO implements ISchemaDAO {
                 available: schema.available,
                 availablePermissions: schema.availablePermissions,
                 permissions: schema.permissions,
-                createdBy: 'user' as const
+                createdBy: userId
             }
             const newSchema = await tx.insert(tables.credentialSchema).values(v)
               .returning();
@@ -145,6 +145,7 @@ export class SchemaDAO implements ISchemaDAO {
                     platform: schema.platform || currentSchema[0].platform,
                     credentialType: schema.credentialType || currentSchema[0].credentialType,
                     schemaVersion: currentSchemaVersion + 1,
+                    createdBy: currentSchema[0].createdBy,
                     available: schema.available ?? currentSchema[0].available,
                     availablePermissions: schema.availablePermissions || currentSchema[0].availablePermissions,
                     permissions: schema.permissions || currentSchema[0].permissions,

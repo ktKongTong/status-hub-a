@@ -7,6 +7,7 @@ import {
   CredentialSchemaOpenAPISchema,
   CredentialSchemaUpdateOpenApiSchema,
 } from "status-hub-shared/models";
+import {getSession} from "@/middleware/auth";
 
 const credentialSchemaRouter = new OpenAPIHono()
 
@@ -28,8 +29,9 @@ credentialSchemaRouter.openapi(
   .buildOpenAPIWithReqBody('create new Credential Schema')
   , async (c) => {
     const {dao: db} = getDB(c)
+    const {user} = getSession(c)
     const body = c.req.valid('json')
-    const newSchema = await db.schemaDAO.createCredentialSchema(body)
+    const newSchema = await db.schemaDAO.createCredentialSchema(body, user!.id)
     return c.json(newSchema)
 })
 

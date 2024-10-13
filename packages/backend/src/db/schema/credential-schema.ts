@@ -19,7 +19,7 @@ export const credentialSchema = sqliteTable('credential_schema', {
     createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
     updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`).$onUpdateFn(() => new Date()),
     status: text('status', { enum: ['ok', 'deleted'] }).notNull().default('ok'),
-    createdBy: text('created_by', { enum: ['user', 'system'] }).notNull().default('user'),
+    createdBy: text('created_by').notNull(),
 }, (table) => ({
     pk: primaryKey({ columns: [table.id, table.schemaVersion] }),
 }))

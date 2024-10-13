@@ -27,11 +27,14 @@ const app = new OpenAPIHono()
 app
 .use("*", loggerMiddleware)
 .use("*", DBMiddleware())
+.use("*", KVMiddleware())
 .use("*",luciaMiddleware())
 .use("*",sessionMiddleware())
 .use("/api/*",verifyMiddleware([
   {path: '/api/credential-schema', method: 'GET'},
   {path: '/api/auth', method: 'GET'},
+  {path: '/api/auth/sign-in', method: 'POST'},
+  {path: '/api/auth/sign-up', method: 'POST'},
   {path: '/api/reference', method: 'GET'},
   {path: '/api/openapi.json', method: 'GET'},
 ]))
@@ -54,6 +57,7 @@ app
 import { sysSchemas ,nsRouter } from '@/route-registry'
 
 import {initSystemSchemas} from "@/db/initial";
+import {KVMiddleware} from "@/middleware/kv";
 
 const sysCredentialSchemas = Object.keys(sysSchemas).map(sysSchemaKey => sysSchemas[sysSchemaKey])
 

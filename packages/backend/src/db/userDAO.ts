@@ -12,21 +12,46 @@ import {and, eq, sql} from "drizzle-orm";
 
 export interface IUserDAO {
   getUserByAccountId(provider: string, platformId: string): Promise<UserAccountSelect | null>;
-  createNewUser(values: UserAccountInsert): Promise<UserAccountSelect | null>;
+  createNewUser(values: UserAccountInsert): Promise<UserAccountSelect>;
   getUserByUserId(userId: string): Promise<UserSelect | null>;
   createUserToken(token: UserTokenInsert): Promise<UserTokenCreateResult>;
   getUserTokensByUserId(userId: string):Promise<UserTokenSelect[]>;
   getUserAndTokenByToken(token: string): Promise<UserAndTokenSelect | null>;
-  checkIfTokenIdentifierExist(identifier: string,userId: string): Promise<boolean>;
+  checkIfTokenIdentifierExist(identifier: string,userId: string): Promise<boolean>
   removeToken(token: string, userId: string): Promise<boolean>;
   removeTokenByIdentifier(identifier: string, userId: string): Promise<boolean>;
+
+  checkEmailExist(email: string): Promise<boolean>;
+
+  getUserByEmail(email: string): Promise<UserSelect | null>;
+  checkEmailCredentialValid(email: string, hashedPassword: string): Promise<boolean>;
 }
 
 export class UserDAO implements IUserDAO {
 
-  constructor(private db: BetterSQLite3Database){}
+  constructor(private readonly db: BetterSQLite3Database){}
 
-  async createNewUser(value: UserAccountInsert): Promise<UserAccountSelect | null> {
+  async getUserByEmail(email: string): Promise<UserSelect | null> {
+    const res =await this.db.select().from(users).where(and(
+      eq(users.email, email)
+    ))
+    return res[0] ?? null;
+  }
+  async checkEmailCredentialValid(email: string, hashedPassword: string): Promise<boolean> {
+    const res = await this.db.select()
+      .from(users)
+      .innerJoin(accounts, eq(users.id, accounts.userId))
+      .where(and(
+        eq(users.email, email),
+        eq(accounts.type, 'email'),
+        eq(accounts.provider, 'self'),
+        eq(accounts.tokenType, 'password'),
+        eq(accounts.accessToken, hashedPassword),
+      ))
+    return res[0] != null;
+  }
+
+  async createNewUser(value: UserAccountInsert): Promise<UserAccountSelect> {
       // tx
       const [user, account] = await this.db.transaction(async (tx)=> {
         const user = await tx.insert(users).values(value.user).returning()
@@ -109,5 +134,12 @@ export class UserDAO implements IUserDAO {
       eq(verificationTokens.userId, userId)
     ))
     return res.changes > 0
+  }
+
+  async checkEmailExist(email: string): Promise<boolean> {
+    const res =await this.db.select({
+      c: sql<number>`COUNT(${users.id})`
+    }).from(users).where(eq(users.email, email))
+    return res[0].c > 0
   }
 }
