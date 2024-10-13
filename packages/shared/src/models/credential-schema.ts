@@ -60,7 +60,7 @@ export const CredentialSchemaSelectItemSchema = z.object({
     refreshLogic: z.string().optional().nullish(),
     description: z.string().default(''),
     maximumRefreshIntervalInSec: z.number(),
-    createdBy: z.enum(['system', 'user']),
+    createdBy: z.string(),
     createdAt: z.date(),
     updatedAt: z.date(),
     schemaFields: z.array(CredentialSchemaFieldOpenApiSchema)
