@@ -17,16 +17,17 @@ const connection = {
   host: redisHost,
   port: port,
 }
-const tokenRefreshQueue = new Queue('token-refresh-task', {connection});
-const oauthTokenRefreshQueue = new  Queue('oauth-token-refresh-task', {connection,});
+
 const serverAdapter = new HonoAdapter(serveStatic);
 const basePath = '/admin/queues'
 serverAdapter.setBasePath(basePath);
 const bulLBoardRouter = new Hono();
-createBullBoard({
-  queues: [new BullMQAdapter(tokenRefreshQueue),new BullMQAdapter(oauthTokenRefreshQueue)],
+
+const queueBoard = createBullBoard({
+  queues: [],
   serverAdapter,
 });
+
 const randomPW = randomString(4)
 
 bulLBoardRouter
@@ -47,55 +48,26 @@ const onBullBoardStartup = ({ address, port }: {address: string, port: number}) 
 
 export { bulLBoardRouter,onBullBoardStartup }
 
+
 import { Worker } from 'bullmq';
-export function initSchedule() {
-  tokenRefreshQueue.upsertJobScheduler(
-    'repeat-every-5min',
-    {
-      every: 60000 * 5, // Job will repeat every 10000 milliseconds (10 seconds)
-    },
-    {
-      name: 'every-job',
-      data: {},
-      opts: {}, // Optional additional job options
-    },
-  );
-  const db = getDB("t" as any)
+import {JobQueue, Task} from "@/job/interface";
+import {SystemOAuthTokenJob} from "@/job/token-refresh/oauth-token-refresh";
+import {Every5minTokenRefreshCheckerJob} from "@/job/token-refresh/every-5-min-refresh-checker";
 
-  const github = new GitHub(process.env.GITHUB_CLIENT_ID!, process.env.GITHUB_CLIENT_SECRET!, process.env.GITHUB_REDIRECT_URL!);
-  const spotify = new Spotify(process.env.SPOTIFY_CLIENT_ID!, process.env.SPOTIFY_CLIENT_SECRET!, process.env.SPOTIFY_REDIRECT_URL!);
 
-const oauthTokenRefreshWorker = new Worker('oauth-token-refresh-task', async (job:Job<CredentialRefresh>) => {
-  logger.info(`trigger oauth credential refresh`)
-  const credential = job.data
-  if(credential.schema.credentialType !== 'oauth') {
-    return
+export class BullMQQueue implements JobQueue {
+  queues: Record<string, Queue> = {};
+  workers: Record<string, Worker> = {};
+  constructor() {
+    const systemOAuthTokenRefreshJob = new SystemOAuthTokenJob(connection)
+    const schedule5minRefreshJob = new Every5minTokenRefreshCheckerJob(connection, systemOAuthTokenRefreshJob.queue)
+    queueBoard.addQueue(new BullMQAdapter(systemOAuthTokenRefreshJob.queue))
+    queueBoard.addQueue(new BullMQAdapter(schedule5minRefreshJob.queue))
   }
-  let oauth:GitHub|Spotify = github
-  switch(credential.schema.platform) {
-    case 'github':
-      oauth = github;break
-    case 'spotify':
-      oauth = spotify;break
+
+  private init() {
   }
-  logger.info(`refreshing oauth ${credential.id}-${credential.schema.platform}-${credential.schema.schemaVersion}`)
-  const res = await oauth.refreshAccessToken(credential.credentialValues['refreshToken'] as string)
-  credential.credentialValues['accessToken'] = res.accessToken()
-  if(res.hasRefreshToken()) {
-    credential.credentialValues['refreshToken'] = res.refreshToken()
+  createTask(task: Task): void {
+    throw new Error("Method not implemented.");
   }
-  await db.dao.credentialDAO.updateCredential(credential.id, credential.credentialValues,true)
-  console.log(job.data);
-}, { connection });
-const tokenRefreshWorker = new Worker('token-refresh-task', async (job) => {
-    logger.info("trigger token refresh task", )
-    const needRefresh = await db.dao.credentialDAO.getNeedRefreshCredentials()
-    const oauthTask = needRefresh
-      .filter(it=>it.schema.credentialType === 'oauth')
-    logger.info(`total task count: ${oauthTask.length}`, )
-    for (const credential of oauthTask) {
-      oauthTokenRefreshQueue.add(`oauth-refresh-${credential.id}`,credential)
-    }
-    logger.info("trigger token refresh task finished")
-  }, { connection });
 }

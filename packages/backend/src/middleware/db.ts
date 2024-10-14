@@ -1,16 +1,15 @@
 import {BetterSQLite3Database, drizzle} from "drizzle-orm/better-sqlite3";
 import type {Context, MiddlewareHandler} from "hono";
 import { DAO } from "@/db/dao";
-declare module 'hono' {
-    interface ContextVariableMap {
-        // db: DBClient
-        dao: DAO
-    }
-}
-
 import {type Database} from "better-sqlite3";
 import B3Database from "better-sqlite3";
 import {existsSync, mkdirSync} from "fs";
+
+declare module 'hono' {
+    interface ContextVariableMap {
+        dao: DAO
+    }
+}
 
 class DBInstance {
     private static _db: BetterSQLite3Database | undefined
@@ -45,6 +44,7 @@ class DBInstance {
         return DBInstance._dao as DAO
     }
 }
+
 export const getDrizzleDB = () => {
     return DBInstance.db
 }
@@ -57,8 +57,8 @@ export const getDB = (c:Context) => {
 
 export const DBMiddleware = (): MiddlewareHandler => {
     return async (c, next) => {
-        // c.set('db', db)
-        // c.set('dao', dao)
+        // c.set('db', DBInstance.db)
+        c.set('dao', DBInstance.dao)
         await next()
     }
 }
