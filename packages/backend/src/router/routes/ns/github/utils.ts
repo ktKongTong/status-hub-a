@@ -1,9 +1,14 @@
+import {timestamp} from "status-hub-shared/utils";
 
 export const convertGitHubEvent = (event: any) => {
   const action = event.payload.action
   let ghType: string = ''
-  if(action === 'started') {
+  if(action === 'started' && event.type === 'WatchEvent') {
     ghType = 'star'
+  }
+
+  if(event.type === 'CreateEvent' && event.payload.ref_type ==="tag") {
+    ghType = 'tag'
   }
 
   if(event.type === 'PushEvent' && event.payload.commits) {
@@ -15,7 +20,7 @@ export const convertGitHubEvent = (event: any) => {
   }
 
   return {
-    id: Math.random().toString(36),
+    id: event.id,
     type: 'github',
     ghType: ghType,
     relateRepo: event.repo.name,
@@ -24,7 +29,7 @@ export const convertGitHubEvent = (event: any) => {
     actorLink: `https://github.com/${event.actor.display_login}`,
     avatar: event.actor.avatar_url,
     public: event.public,
-    time: event.created_at ? new Date(event.created_at).getTime() : new Date().getTime(),
+    time: timestamp(event.created_at),
     payload: event.payload
   }
 }
