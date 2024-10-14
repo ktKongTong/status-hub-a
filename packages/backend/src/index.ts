@@ -60,7 +60,6 @@ app
 .route('/', credentialSchemaRouter)
 .route('/', credentialRouter)
 .route('/', routes)
-.route('/', bulLBoardRouter)
 
 
 import {nsRouter, sysSchemas} from '@/route-registry'
@@ -89,10 +88,14 @@ app.onError((err, c)=> {
 })
 
 
+serve({
+  fetch: bulLBoardRouter.fetch,
+  port: env("BULL_MQ_PANEL_PORT", 8419, parseInt)
+})
 
 serve({
   fetch: app.fetch,
-  port: env("PORT", 8787, parseInt),
+  port: env("PORT", 8420, parseInt),
 },(addrInfo)=>{
   onBullBoardStartup(addrInfo)
   logger.info(`StatusHub Running on http://${addrInfo.address}:${addrInfo.port}/`);

@@ -9,7 +9,7 @@ export abstract class JobHandler<T> {
   constructor(name: string, conn: Connection) {
     this.name = name;
     this.queue = new Queue(this.name, {connection: conn})
-    this.workers = [new Worker(this.name, this.handler, {connection: conn})]
+    this.workers = [new Worker(this.name, this.handler.bind(this), {connection: conn})]
   }
 }
 

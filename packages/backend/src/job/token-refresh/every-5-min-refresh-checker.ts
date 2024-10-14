@@ -17,7 +17,7 @@ export class Every5minTokenRefreshCheckerJob extends JobHandler<any> {
     logger.info("trigger token refresh task")
     const needRefresh = await db.dao.credentialDAO.getNeedRefreshCredentials()
     const oauthTask = needRefresh.filter(it=>it.schema.credentialType === 'oauth')
-    logger.info(`total task count: ${oauthTask.length}`, )
+    logger.info(`total task count: ${oauthTask.length}`)
     for (const credential of oauthTask) {
       await this.subQueue.add(`oauth-refresh-${credential.id}`, credential)
     }
