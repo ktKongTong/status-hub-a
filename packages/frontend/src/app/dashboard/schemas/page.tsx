@@ -11,11 +11,13 @@ const CredentialSchemaManagement: React.FC = () => {
 
   const { schemas, isLoading, error } = useCredentialSchemas();
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">凭证模式管理</h1>
-      <CredentialSchemaFormDialog asChild>
-        <Button className="mb-4">创建新模式</Button>
-      </CredentialSchemaFormDialog>
+    <div className="">
+      <div className={'flex items-center justify-between py-8'}>
+        <h1 className="text-2xl font-bold mb-4">Credential Schema</h1>
+        <CredentialSchemaFormDialog asChild>
+          <Button className="mb-4">创建新模式</Button>
+        </CredentialSchemaFormDialog>
+      </div>
       <Table>
         <TableHeader>
           <TableRow>
@@ -28,7 +30,7 @@ const CredentialSchemaManagement: React.FC = () => {
         </TableHeader>
         <TableBody>
           {
-             schemas.map((schema) => (<SchemaTableRow schema={schema} key={schema.id}/>))
+            schemas.map((schema) => (<SchemaTableRow schema={schema} key={schema.id}/>))
           }
         </TableBody>
         {

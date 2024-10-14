@@ -1,4 +1,4 @@
-import {useMutation, useQuery} from "@tanstack/react-query";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import ofetch from "@/lib/ofetch";
 import {useRouter} from "next/navigation";
 import {SendSignUpVerificationCode, SignInByEmail, SignUpByEmail} from "status-hub-shared/models";
@@ -14,10 +14,14 @@ export const useSession = () => {
     queryFn: () => authFetch.get('/api/user/me'),
     retry: false,
   });
+  const queryClient = useQueryClient();
   const route = useRouter();
   const loginMutation = ()=> route.push('/api/auth/login/github')
   const logoutMutation = ()=> {
-    ofetch.post('/api/auth/logout').then(res => {route.push('/');})
+    ofetch.post('/api/auth/logout').then(res => {
+      queryClient.invalidateQueries({queryKey:['me']})
+      route.push('/')
+    })
   }
   if (data) {
     return {
@@ -28,6 +32,7 @@ export const useSession = () => {
       logged: true,
       userId: data.id,
       avatar: data.avatar,
+      email: data.email,
       name: data.name,
     }
   }
@@ -40,7 +45,8 @@ export const useSession = () => {
     logged: false,
     userId: undefined,
     avatar: undefined,
-    name: undefined
+    name: undefined,
+    email: undefined,
   };
 };
 
@@ -52,13 +58,17 @@ export const useSignInOrSignUp = () => {
   // sign in by email credential
   // sign in by email otp
   const route = useRouter();
+  const queryClient = useQueryClient();
   const signInByOauth = ()=> route.push('/api/auth/login/github')
 
   const signInByEmail = useMutation<void, any, SignInByEmail>({
     mutationKey: ['signInByEmail'],
     mutationFn: (v)=> authFetch.post('/api/auth/sign-in/email', {
       json: v,
-    })
+    }),
+    onSuccess: data => {
+      queryClient.invalidateQueries({queryKey:['me']})
+    }
   })
 
   const signUpByEmail = useMutation<void, any,SignUpByEmail>({

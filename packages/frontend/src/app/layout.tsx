@@ -36,8 +36,8 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
       <div className="flex flex-col justify-between w-full h-full min-h-screen">
-        <Header/>
-        <main className="flex-auto w-full max-w-full px-10 py-4 mx-auto sm:px-16 md:py-6">
+        {/*<Header/>*/}
+        <main className="flex-auto w-full max-w-full mx-auto">
           {children}
         </main>
         <Toaster />

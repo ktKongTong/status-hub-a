@@ -13,6 +13,8 @@ import { useMeasure } from "@uidotdev/usehooks";
 
 import {SignUpByEmailSchema, SignInByEmailSchema, SignUpByEmail, SignInByEmail} from "status-hub-shared/models";
 import {useSignInOrSignUp} from "@/hooks/query/useSession";
+import {GitHubLogoIcon} from "@radix-ui/react-icons";
+import {Separator} from "@/components/ui/separator";
 
 
 const AuthModal = () => {
@@ -32,11 +34,20 @@ const AuthModal = () => {
 
   const [ref, { width, height }] = useMeasure();
   const {signInByEmail, signUpByEmail, signInByOauth, getSignUpVerificationCode} = useSignInOrSignUp()
+
+  const [tab, setTab] = useState<string>('sign-in');
   const onSignIn = (data: SignInByEmail) => {
-    signInByEmail.mutate(data)
+    signInByEmail.mutateAsync(data)
+      .then(res=> {
+        setIsOpen(false);
+      })
   };
   const onSignUp = (data: SignUpByEmail) => {
-    signUpByEmail.mutate(data)
+    signUpByEmail.mutateAsync(data)
+      .then(res=> {
+        setTab('sign-in')
+        signInForm.setValue('email', data.email);
+      })
   };
   const [isVerificationSent, setIsVerificationSent] = useState(false);
   const [countdown, setCountdown] = useState(120);
@@ -72,12 +83,13 @@ const AuthModal = () => {
           maxHeight: (height ?? 1000) + 64,
         }}>
           <div ref={ref}>
-          <Tabs defaultValue={'signin'} className="w-full">
+          <Tabs value={tab} onValueChange={v=>setTab(v)} className="w-full">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="signin">Sign In</TabsTrigger>
-              <TabsTrigger value="signup">Sign Up</TabsTrigger>
+              <TabsTrigger value="sign-in">Sign In</TabsTrigger>
+              <TabsTrigger value="sign-up">Sign Up</TabsTrigger>
             </TabsList>
-            <TabsContent value="signin">
+            <TabsContent value="sign-in">
+              <div>
               <Form {...signInForm}>
                 <form ref={signInFormRef} onSubmit={signInForm.handleSubmit(onSignIn)} className="space-y-4">
                   <FormField
@@ -122,8 +134,21 @@ const AuthModal = () => {
                   <Button type="submit" className="w-full">Sign In</Button>
                 </form>
               </Form>
+                <div className="my-6 flex items-center justify-center overflow-hidden">
+                  <Separator orientation={'horizontal'} />
+                  <span className="mx-4 text-xs text-slate-11 font-normal">OR</span>
+                  <Separator orientation={'horizontal'}/>
+                </div>
+                <div>
+                  <ul className={'w-full flex items-center gap-2 justify-around'}>
+                    <li><Button type='button' size={'icon'} variant={'ghost'} onClick={() => {signInByOauth()}}><GitHubLogoIcon/></Button></li>
+                  </ul>
+                </div>
+
+              </div>
+
             </TabsContent>
-            <TabsContent value="signup">
+            <TabsContent value="sign-up">
               <Form {...signUpForm}>
                 <form ref={signUpFormRef} onSubmit={signUpForm.handleSubmit(onSignUp)} className="space-y-4">
                   <FormField

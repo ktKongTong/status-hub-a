@@ -9,6 +9,7 @@ import { Credential } from 'status-hub-shared/models'
 import CredentialEditor from "@/app/dashboard/credentials/editor";
 import CredentialCreateForm from "@/app/dashboard/credentials/credential-create-form";
 import {useCredentialSchemas} from "@/hooks/use-credential-schemas";
+import CredentialSchemaFormDialog from "@/app/dashboard/schemas/credential-schema-form";
 
 
 export default function CredentialManagement() {
@@ -27,9 +28,11 @@ export default function CredentialManagement() {
   if (!credentials) return <div className="p-4">没有可用的凭证数据</div>;
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">凭证管理</h1>
-      {schemas && <CredentialCreateForm schemas={schemas}/>}
+    <div className="">
+      <div className={'flex items-center justify-between py-8'}>
+        <h1 className="text-2xl font-bold">凭证管理</h1>
+        {schemas && <CredentialCreateForm schemas={schemas}/>}
+      </div>
       <Table>
         <TableHeader>
           <TableRow>
@@ -48,10 +51,11 @@ export default function CredentialManagement() {
                 <TableCell>{credential.schema.credentialType}</TableCell>
                 <TableCell>
                   <Button variant="outline" className="mr-2" onClick={() => {
-                    if(credential.id === credentialDetailId) setCredentialDetailId(null)
+                    if (credential.id === credentialDetailId) setCredentialDetailId(null)
                     else setCredentialDetailId(credential.id)
                   }}>查看</Button>
-                  <Button variant="outline" className="mr-2" onClick={() => setEditingCredential(credential)}>编辑</Button>
+                  <Button variant="outline" className="mr-2"
+                          onClick={() => setEditingCredential(credential)}>编辑</Button>
                   <Button variant="destructive" onClick={() => handleDeleteCredential(credential.id)}>删除</Button>
                 </TableCell>
               </TableRow>
@@ -77,7 +81,8 @@ export default function CredentialManagement() {
         </TableBody>
       </Table>
       {
-        editingCredential && <CredentialEditor editingCredential={editingCredential} setEditingCredential={setEditingCredential} />
+        editingCredential &&
+          <CredentialEditor editingCredential={editingCredential} setEditingCredential={setEditingCredential}/>
       }
 
     </div>
