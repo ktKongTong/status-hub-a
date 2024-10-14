@@ -1,11 +1,11 @@
 
 import {CredentialType, Namespace} from "@/interface";
-import {CookieCr} from "./credentials/cookie.cr";
+import { credential } from "./credentials/cookie.cr";
 
 
 export const namespace: Namespace = {
   platform: 'bilibili',
   category: ['video'],
-  supportCredentials: [CookieCr],
+  supportCredentials: [credential],
   // routes: [route]
 }

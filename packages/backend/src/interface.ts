@@ -17,6 +17,7 @@ export interface PlatformCredential {
   autoRefreshable: boolean;
   maximumRefreshIntervalInSec?: number;
   description: string;
+  expectExpires?: number;
   // a user defined script?
   refreshLogic?: string;
   availablePermissions?: string[],

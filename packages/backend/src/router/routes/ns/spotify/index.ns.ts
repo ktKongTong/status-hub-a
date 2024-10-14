@@ -1,5 +1,5 @@
 
-import {oauthToken} from "./credential";
+import { credential as oauthToken } from "./oauth.cr";
 import {Namespace} from "@/interface";
 
 

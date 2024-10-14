@@ -53,15 +53,16 @@ import { Worker } from 'bullmq';
 import {JobQueue, Task} from "@/job/interface";
 import {SystemOAuthTokenJob} from "@/job/token-refresh/oauth-token-refresh";
 import {Every5minTokenRefreshCheckerJob} from "@/job/token-refresh/every-5-min-refresh-checker";
+import {SystemRefreshTask} from "@/job/token-refresh/system-refresh-task";
 
 
 export class BullMQQueue implements JobQueue {
   queues: Record<string, Queue> = {};
   workers: Record<string, Worker> = {};
   constructor() {
-    const systemOAuthTokenRefreshJob = new SystemOAuthTokenJob(connection)
-    const schedule5minRefreshJob = new Every5minTokenRefreshCheckerJob(connection, systemOAuthTokenRefreshJob.queue)
-    queueBoard.addQueue(new BullMQAdapter(systemOAuthTokenRefreshJob.queue))
+    const systemCredentialRefreshJob = new SystemRefreshTask(connection)
+    const schedule5minRefreshJob = new Every5minTokenRefreshCheckerJob(connection, systemCredentialRefreshJob.queue)
+    queueBoard.addQueue(new BullMQAdapter(systemCredentialRefreshJob.queue))
     queueBoard.addQueue(new BullMQAdapter(schedule5minRefreshJob.queue))
   }
 

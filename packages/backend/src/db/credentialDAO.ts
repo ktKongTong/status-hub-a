@@ -12,6 +12,7 @@ export interface ICredentialDAO {
   getNeedRefreshCredentials(): Promise<CredentialRefresh[]>
   getCredential(userId: string): Promise<Credential[]>;
   updateCredential(credentialId: number, credentialValues: Record<string, string | number | boolean>, refresh?: boolean): Promise<void>
+  refreshCredential(credentialId: number, credentialValues: Record<string, string | number | boolean>, refresh?: boolean): Promise<void>
   deleteCredential(credentialId: number): Promise<void>
 }
 
@@ -30,6 +31,7 @@ export class CredentialDAO implements ICredentialDAO {
       updatedAt: tables.platformCredentials.updatedAt,
       schemaCreatedAt: tables.credentialSchema.createdAt,
       schemaUpdatedAt: tables.credentialSchema.updatedAt,
+      createdBy: tables.credentialSchema.createdBy,
       schemaFields: sql<string>`json_group_array(DISTINCT json_object('fieldName', ${tables.credentialSchemaFields.fieldName}, 'fieldType', ${tables.credentialSchemaFields.fieldType}, 'isRequired', ${tables.credentialSchemaFields.isRequired}, 'description', ${tables.credentialSchemaFields.description}, 'createdAt', ${tables.credentialSchemaFields.createdAt}, 'updatedAt', ${tables.credentialSchemaFields.updatedAt}))`,
       credentialValues: tables.platformCredentials.credentialValues,
       lastRefreshedAt: tables.platformCredentials.lastRefreshedAt,
@@ -52,7 +54,6 @@ export class CredentialDAO implements ICredentialDAO {
       )
       .groupBy(tables.platformCredentials.id);
 
-    const s = query.toSQL()
     const result = await query.execute()
     return result.map((row:any) => ({
       userId: row.userId,
@@ -64,6 +65,7 @@ export class CredentialDAO implements ICredentialDAO {
         schemaVersion: row.schemaVersion,
         available: row.available,
         permissions: row.permissions,
+        createdBy: row.createdBy,
         availablePermissions: row.availablePermissions,
         createdAt: row.schemaCreatedAt,
         updatedAt: row.schemaUpdatedAt,
@@ -211,6 +213,26 @@ export class CredentialDAO implements ICredentialDAO {
         .where(eq(tables.platformCredentials.id, credentialId));
     }
 
+  }
+
+  async refreshCredential(credentialId: number, credentialValues: any, refresh: boolean = false): Promise<void> {
+    const now =  new Date();
+    if(refresh) {
+      await this.db.update(tables.platformCredentials)
+        .set({
+          credentialValues: credentialValues,
+          updatedAt: now,
+          lastRefreshedAt: now
+        })
+        .where(eq(tables.platformCredentials.id, credentialId));
+    }else {
+      await this.db.update(tables.platformCredentials)
+        .set({
+          credentialValues: credentialValues,
+          updatedAt: now
+        })
+        .where(eq(tables.platformCredentials.id, credentialId));
+    }
   }
 
   async deleteCredential(credentialId: number): Promise<void> {

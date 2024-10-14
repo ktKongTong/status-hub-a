@@ -1,4 +1,5 @@
 import {Context} from "hono";
+import {CredentialRefresh} from "status-hub-shared/models";
 
 export type CredentialType = 'cookie' | 'oauth' | 'apiToken' | 'credential' | 'oidc' | 'none'
 
@@ -35,7 +36,14 @@ export interface RouteItem<T extends string = ''> {
   handler: (ctx:Context) => Response
 }
 
+export type CredentialStatus = 'ok' | 'out-date' | 'in-active' | 'unknown' | 'refreshing'
 
+export type RefreshFunction = (credential: CredentialRefresh, env?:any) => Promise<{
+  values: Record<string, string | number | boolean>,
+  isActive: boolean,
+  status: CredentialStatus,
+  ok: boolean,
+}>
 
 export const generateCredentialSchemaAndFieldsFromPlatformCredential = (c : PlatformCredential) => {
   const id = `system-${c.platform}-${c.credentialType}`

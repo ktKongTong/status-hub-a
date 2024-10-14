@@ -1,7 +1,7 @@
 
 import {
   generateCredentialSchemaAndFieldsFromPlatformCredential,
-  Namespace,
+  Namespace, PlatformCredential,
   RouteItem,
   SystemSchemaInsert
 } from "./interface";
@@ -11,6 +11,7 @@ import {getCurrentPath} from "@/utils/path";
 import path from "node:path";
 import fs from "node:fs";
 import {Context, Hono} from "hono";
+import {RefreshFunction} from "@/types";
 
 // see rsshub registry.ts
 let modules: Record<string, { namespace: Namespace }> = {};
@@ -20,10 +21,14 @@ const __dirname = getCurrentPath(import.meta.url);
 let namespaces: Record<string, Namespace & {routes: Record<string, RouteItem & {location: string}>}> = {};
 let sysSchemas: Record<string, SystemSchemaInsert> = {};
 
+let credentialSchemas: Record<string, SystemSchemaInsert & {location: string,namespace:string, refreshFunc?: RefreshFunction}> = {}
+let credentialRefreshFuncs: Record<string, RefreshFunction> = {}
+
 switch (process.env.NODE_ENV) {
   case 'test':
   case 'production':
       namespaces = JSON.parse(fs.readFileSync(path.join(__dirname, "../assets/build/routes.json")).toString());
+      credentialSchemas = JSON.parse(fs.readFileSync(path.join(__dirname, "../assets/build/credential-schemas.json")).toString());
     // namespaces = await import('../assets/build/routes.json', { assert: { type: "json" }});
     //@ts-ignore
     // console.log("namespaces", namespaces);
@@ -38,7 +43,11 @@ switch (process.env.NODE_ENV) {
 
 if (Object.keys(modules).length) {
   for (const module in modules) {
-    const content = modules[module] as { namespace: Namespace } | {route: RouteItem};
+    const content = modules[module] as
+      { namespace: Namespace } |
+      {route: RouteItem} |
+      {credential: PlatformCredential, refreshFunc?: RefreshFunction}
+    ;
     const namespace = module.split(/[/\\]/)[1];
     if ('namespace' in content) {
       namespaces[namespace] = Object.assign({ routes: {}, supportCredentials: [] }, namespaces[namespace], content.namespace);
@@ -71,6 +80,18 @@ if (Object.keys(modules).length) {
           location: module.split(/[/\\]/).slice(2).join('/'),
         };
       }
+    }else if('credential' in content) {
+      const cr = content.credential
+      const schema = generateCredentialSchemaAndFieldsFromPlatformCredential(cr)
+      credentialSchemas[`system-${cr.platform}-${cr.credentialType}`] = {
+        ...schema,
+        namespace: cr.platform,
+        location: module.split(/[/\\]/).slice(2).join('/'),
+      }
+      const credentialID = `system-${cr.platform}-${cr.credentialType}`
+      if(content.refreshFunc) {
+        credentialRefreshFuncs[credentialID] = content.refreshFunc
+      }
     }
   }
 }else {
@@ -82,9 +103,19 @@ if (Object.keys(modules).length) {
       sysSchemas[id] = credential;
     })
   })
+  for(const cr of Object.keys(credentialSchemas)) {
+    let credential = credentialSchemas[cr];
+    if (typeof credential.refreshFunc !== 'function') {
+      const location = credential.location.replace(/\.ts$/,'.js')
+      const { refreshFunc } = await import(`./router/routes/ns/${credential.namespace}/${location}`);
+      credential.refreshFunc = refreshFunc;
+      credentialRefreshFuncs[cr] = refreshFunc;
+    }
+    credentialSchemas[cr] = credential;
+  }
 }
 
-export {namespaces, sysSchemas}
+export { namespaces, sysSchemas, credentialRefreshFuncs, credentialSchemas }
 
 const app = new Hono().basePath(`/api/route`);
 
