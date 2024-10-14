@@ -34,6 +34,7 @@
     "@lucia-auth/adapter-drizzle": "^1.1.0",
     "@scalar/hono-api-reference": "^0.5.149",
     "arctic": "2.0.0-next.9",
+    "bcryptjs": "^2.4.3",
     "better-sqlite3": "^11.3.0",
     "bullmq": "^5.16.0",
     "cacheable": "^1.8.0",
@@ -45,10 +46,12 @@
     "hono": "^4.6.3",
     "lucia": "^3.2.0",
     "ofetch": "^1.4.1",
+    "resend": "^4.0.0",
     "status-hub-shared": "workspace:*"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240529.0",
+    "@types/bcryptjs": "^2.4.6",
     "@types/better-sqlite3": "^7.6.11",
     "cross-env": "^7.0.3",
     "drizzle-kit": "^0.24.2",

@@ -5,8 +5,9 @@ import {SendSignUpVerificationCodeSchema, SignInByEmailSchema, SignUpByEmailSche
 import {getDB} from "@/middleware/db";
 import {InvalidParamError} from "@/errors";
 import {getKV} from "@/middleware/kv";
-import {createUid} from "@/utils/uid";
+import {createUid, generateVerificationCode, hashPassword} from "@/utils/uid";
 import {getSession} from "@/middleware/auth";
+import {getEmailSender} from "@/middleware/email";
 export const loginRouter = new OpenAPIHono();
 
 loginRouter.route("/", githubLoginRouter);
@@ -21,11 +22,10 @@ loginRouter.openapi(
   const body = c.req.valid('json')
   const {dao} = getDB(c)
   const user =await dao.userDAO.getUserByEmail(body.email)
-  //
   const valid = await dao.userDAO.checkEmailCredentialValid(body.email, body.password)
-    if(!user || !valid) {
-      throw new InvalidParamError("invalid Param")
-    }
+  if(!user || !valid) {
+    throw new InvalidParamError("用户不存在或密码错误")
+  }
   const userId = user.id
   // set user Cookie
   const { lucia } = getSession(c)
@@ -50,12 +50,13 @@ async (c) => {
     const email = body.email
     const name = email.split('@')[0]
     const uid = createUid()
-    const hashedPasswd = body.password
+    const hashedPasswd = await hashPassword(body.password)
     const account = await dao.userDAO.createNewUser({
       user: {
         id: uid,
         name: name,
         email,
+        emailVerified: new Date(),
         avatar: `https://avatar.iran.liara.run/username?username=${name}`,
       },
       account: {
@@ -78,7 +79,7 @@ loginRouter
   R
     .post('/api/auth/sign-up/email/verification-code')
     .reqBodySchema(SendSignUpVerificationCodeSchema)
-    .buildOpenAPIWithReqBody('send verification-code for Sign up  with email'),
+    .buildOpenAPIWithReqBody('send verification code for sign up  with email'),
 
   async (c) => {
 
@@ -87,6 +88,9 @@ loginRouter
     const exist = await dao.userDAO.checkEmailExist(body.email)
     if(exist) throw new InvalidParamError("该邮箱已经存在")
     const kv = getKV(c)
-    const res = await kv.set(`status-hub:code:sign-up:${body.email}`, "000111", 60 * 5 * 1000)
+    const code = generateVerificationCode()
+    const res = await kv.set(`status-hub:code:sign-up:${body.email}`, code, 60 * 5 * 1000)
+    const sender = getEmailSender(c)
+    await sender.sendVerificationCode(body.email, code)
     return c.json({message: "OK"}, 200)
   })

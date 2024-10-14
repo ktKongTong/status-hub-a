@@ -16,6 +16,9 @@ export const createGitHubAPI = (token: string) => {
       return res
     }
 
+    async function getUserEmails() {
+      return await f.get('/user/emails')
+    }
   //   https://api.github.com/user
     async function getUser() {
       return await f.get('/user')
@@ -23,7 +26,8 @@ export const createGitHubAPI = (token: string) => {
 
     return {
       getRecentEvent,
-      getUser
+      getUser,
+      getUserEmails
     }
   
   }

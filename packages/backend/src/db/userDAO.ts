@@ -1,14 +1,15 @@
 import {BetterSQLite3Database} from "drizzle-orm/better-sqlite3";
 import {
   accounts,
+  users,
   UserAccountInsert,
   UserAccountSelect, UserAndTokenSelect,
-  users,
   UserSelect, UserTokenCreateResult,
   UserTokenInsert, UserTokenSelect,
   verificationTokens
 } from "./schema";
 import {and, eq, sql} from "drizzle-orm";
+import {verifyPassword} from "@/utils";
 
 export interface IUserDAO {
   getUserByAccountId(provider: string, platformId: string): Promise<UserAccountSelect | null>;
@@ -24,7 +25,7 @@ export interface IUserDAO {
   checkEmailExist(email: string): Promise<boolean>;
 
   getUserByEmail(email: string): Promise<UserSelect | null>;
-  checkEmailCredentialValid(email: string, hashedPassword: string): Promise<boolean>;
+  checkEmailCredentialValid(email: string, rawPassword: string): Promise<boolean>;
 }
 
 export class UserDAO implements IUserDAO {
@@ -37,7 +38,7 @@ export class UserDAO implements IUserDAO {
     ))
     return res[0] ?? null;
   }
-  async checkEmailCredentialValid(email: string, hashedPassword: string): Promise<boolean> {
+  async checkEmailCredentialValid(email: string, rawPassword: string): Promise<boolean> {
     const res = await this.db.select()
       .from(users)
       .innerJoin(accounts, eq(users.id, accounts.userId))
@@ -46,13 +47,13 @@ export class UserDAO implements IUserDAO {
         eq(accounts.type, 'email'),
         eq(accounts.provider, 'self'),
         eq(accounts.tokenType, 'password'),
-        eq(accounts.accessToken, hashedPassword),
       ))
-    return res[0] != null;
+    const pw = res?.[0]?.account?.accessToken
+    if (!pw) return false;
+    return verifyPassword(rawPassword, pw)
   }
 
   async createNewUser(value: UserAccountInsert): Promise<UserAccountSelect> {
-      // tx
       const [user, account] = await this.db.transaction(async (tx)=> {
         const user = await tx.insert(users).values(value.user).returning()
         const account = await tx.insert(accounts).values(value.account).returning()

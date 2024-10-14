@@ -4,3 +4,4 @@ export function randomString(size: number) {
   const bytes = crypto.getRandomValues(new Uint8Array(size))
   return Array.from(bytes).reduce(r, "")
 }
+export * from './uid'

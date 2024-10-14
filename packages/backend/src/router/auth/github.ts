@@ -8,6 +8,20 @@ import {isProd} from "@/utils/env";
 import {createGitHubAPI} from "@/router/routes/ns/github/github";
 import {createUid} from "@/utils/uid";
 
+type GHEmails = {
+  email: string;
+  primary: boolean,
+  verified: boolean,
+}
+const getEmails = (emails:GHEmails[])=> {
+  return emails.sort((a,b) => {
+    if(a.primary) return -1
+    if(b.primary) return 1
+    if(a.verified) return -1
+    return 1
+  })[0]
+}
+
 export const githubLoginRouter = new Hono().basePath('/api/auth');
 
 githubLoginRouter.get("/login/github", async (c) => {
@@ -42,7 +56,11 @@ githubLoginRouter.get("/login/github/callback", async (c) => {
     const accessToken = tokens.accessToken();
     const socpes = tokens.scopes()
     const githubAPI = createGitHubAPI(accessToken)
-    const githubUser = await githubAPI.getUser() as GitHubUser
+    const [githubUser, githubUserEmails] = await Promise.all([
+      githubAPI.getUser(),
+      githubAPI.getUserEmails()
+    ])
+    const userEmail = getEmails(githubUserEmails).email
     const existingUser = await db.userDAO.getUserByAccountId('github', githubUser.id)
     if (existingUser) {
       const session = await lucia.createSession(existingUser.user.id, {});
@@ -51,27 +69,26 @@ githubLoginRouter.get("/login/github/callback", async (c) => {
     }
 
     const userId = createUid()
-
-    await db.userDAO.createNewUser({
+    const data = {
       user: {
         id: userId,
         name: githubUser.name ?? githubUser.login,
-        email: githubUser.email ?? "unknown@example.com",
-        emailVerified: githubUser.email ? new Date() : null,
+        email: githubUser.email ?? userEmail,
+        emailVerified: new Date(),
         avatar: githubUser.avatar_url,
       },
       account: {
         userId: userId,
-        type: 'oauth',
-        provider: 'github',
+        type: 'oauth' as const,
+        provider: 'github' as const,
         providerAccountId: githubUser.id,
         accessToken: accessToken,
         scope: socpes.join(',')
       }
-    })
+    }
+    await db.userDAO.createNewUser(data)
     const session = await lucia.createSession(userId, {});
     c.header("Set-Cookie", lucia.createSessionCookie(session.id).serialize(), { append: true });
-    // frontend login successfully
     return c.redirect("/")
   } catch (e) {
     if (e instanceof OAuth2RequestError && e.message === "bad_verification_code") {
