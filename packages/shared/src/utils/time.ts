@@ -1,4 +1,5 @@
 
+
 const humanize = (times: string[]) => {
   const [delimiter, separator] = [',', '.'];
   const orderTimes = times.map((v) => v.replaceAll(/(\d)(?=(\d{3})+(?!\d))/g, '$1' + delimiter));
@@ -19,3 +20,11 @@ export const timestamp = (start: number | string | undefined) => {
   const date = start ? new Date(start) : new Date();
   return Math.ceil(date.getTime()/1000)
 };
+
+import relativeTime from 'dayjs/plugin/relativeTime'
+import dayjs from "dayjs";
+dayjs.extend(relativeTime);
+
+export const formatRelativeTimeToNow = (time: string) => {
+  return dayjs().to(dayjs(time))
+}

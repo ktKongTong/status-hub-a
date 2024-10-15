@@ -4,7 +4,7 @@ import {TokenSelectDBOSchema} from "../base/token";
 
 export const TokenSelectVOSchema  = TokenSelectDBOSchema
   .merge(z.object({
-    shortToken: z.string()
+    shortToken: z.string(),
   }))
   .omit({
     token: true,

@@ -6,7 +6,6 @@
     "build": "tsc && tsc-alias"
   },
   "type": "module",
-
   "files": [
     "package.json",
     "src",
@@ -37,6 +36,7 @@
   "dependencies": {
     "@anatine/zod-mock": "^3.13.4",
     "@hono/zod-openapi": "^0.16.2",
+    "dayjs": "^1.11.13",
     "ofetch": "^1.4.1",
     "zod": "^3.23.8"
   },
