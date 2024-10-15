@@ -1,7 +1,7 @@
 import {Context} from "hono";
-import {CredentialType} from "@/interface";
 import {getCredentialByPlatformAndType} from "@/router/routes/util";
 import {createBilibiliAPI} from "@/router/routes/ns/bilibili/api";
+import {CredentialType} from "status-hub-shared/models";
 
 interface BiliCookie {
   SESSDATA: string
@@ -18,6 +18,6 @@ const handler = async (c:Context) => {
 export const route =  {
   path: '/recent',
   raw: true,
-  usableCredentialType: ['cookie'] as CredentialType[],
+  supportCredentialType: ['cookie'] as CredentialType[],
   handler: handler
 }

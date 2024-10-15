@@ -1,7 +1,6 @@
 import {RouteItem} from "@/app/dashboard/route-link";
 import Link from "@/components/link";
 import {Label} from "@/components/ui/label";
-import UserButton from "@/app/_header/user-button";
 import React from "react";
 import NavUserButton from "@/components/nav-user-button";
 

@@ -18,6 +18,16 @@
       "import": "./dist/models/index.js",
       "default": "./dist/models/index.js"
     },
+    "./models/dbo": {
+      "types": "./dist/models/dbo/index.d.ts",
+      "import": "./dist/models/dbo/index.js",
+      "default": "./dist/models/dbo/index.js"
+    },
+    "./models/vo": {
+      "types": "./dist/models/vo/index.d.ts",
+      "import": "./dist/models/vo/index.js",
+      "default": "./dist/models/vo/index.js"
+    },
     "./utils": {
       "types": "./dist/utils/index.d.ts",
       "import": "./dist/utils/index.js",

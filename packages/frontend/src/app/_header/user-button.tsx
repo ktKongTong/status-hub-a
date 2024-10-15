@@ -8,7 +8,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {useSession} from "@/hooks/query/useSession";
+import {useSession} from "@/hooks/query/use-session";
 import React from "react";
 import SignIn from "@/components/auth/sign-in";
 

@@ -10,6 +10,7 @@ export const createId =(prefix?: string,size?: number)=> {
   }
   return generateId(15)
 }
+
 export function generateVerificationCode() {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let result = '';

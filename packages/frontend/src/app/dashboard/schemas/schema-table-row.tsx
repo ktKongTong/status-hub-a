@@ -1,10 +1,10 @@
-import {CredentialSchemaSelect, CredentialSchemaUpdate} from "status-hub-shared/models";
+import { CredentialSchemaSelect } from "status-hub-shared/models/vo";
 import React, {useState} from "react";
 import {TableCell, TableRow} from "@/components/ui/table";
 import {Button} from "@/components/ui/button";
 import {
   useDeleteCredentialSchema,
-} from "@/hooks/use-credential-schemas";
+} from "@/hooks/query/use-credential-schemas";
 import {Dialog, DialogContent, DialogTrigger} from "@/components/ui/dialog";
 import {Check, X} from "lucide-react";
 import DeleteConfirmFormDialog from "@/components/delete-confirm-form-dialog";

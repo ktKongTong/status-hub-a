@@ -1,7 +1,7 @@
 import {Context} from "hono";
 import {getCredentialByPlatformAndType} from "../../util";
-import {CredentialType} from "@/interface";
 import {createSpotifyAPI} from "./spotify";
+import {CredentialType} from "status-hub-shared/models";
 
 const handler = async (c:Context) => {
   const before = c.req.query('before')
@@ -26,6 +26,6 @@ const handler = async (c:Context) => {
 export const route =  {
   path: '/activity/recent',
   raw: true,
-  usableCredentialType: ['oauth'] as CredentialType[],
+  supportCredentialType: ['oauth'] as CredentialType[],
   handler: handler
 }

@@ -1,7 +1,7 @@
 import {githubLoginRouter} from "./github";
 import {OpenAPIHono} from "@hono/zod-openapi";
 import R from '@/utils/openapi'
-import {SendSignUpVerificationCodeSchema, SignInByEmailSchema, SignUpByEmailSchema} from "status-hub-shared/models";
+import {SendSignUpVerificationCodeSchema, SignInByEmailSchema, SignUpByEmailSchema} from "status-hub-shared/models/vo";
 import {getDB} from "@/middleware/db";
 import {InvalidParamError} from "@/errors";
 import {getKV} from "@/middleware/kv";

@@ -1,6 +1,6 @@
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import ofetch from "@/lib/ofetch";
-import {Credential, CredentialInsert, CredentialUpdate} from "status-hub-shared/models";
+import {Credential, CredentialInsert, CredentialUpdate} from "status-hub-shared/models/vo";
 import {useToast} from "@/hooks/use-toast";
 const API_URL = '/api/credential';
 

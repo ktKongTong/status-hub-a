@@ -1,5 +1,5 @@
 "use client"
-import {useMatchPath} from "@/hooks/useMatchPath";
+import {useMatchPath} from "@/hooks/use-match-path";
 import {Button} from "@/components/ui/button";
 import {cn} from "@/lib/utils";
 import Link from "@/components/link";

@@ -5,14 +5,14 @@ import React, {useState} from "react";
 import {z} from "zod";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import { TokenCreateSchema } from "status-hub-shared/models";
+import { TokenCreateSchema } from "status-hub-shared/models/vo";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
 import {convertShortStrToTime, convertTimeToShortStr} from "@/app/dashboard/token/sec-converter";
 import {LoadingButton} from "@/components/loading-button";
-import {useCreateToken} from "@/hooks/use-tokens";
+import {useCreateToken} from "@/hooks/query/use-tokens";
 import {
-  AlertDialog, AlertDialogAction, AlertDialogCancel,
+  AlertDialog, AlertDialogCancel,
   AlertDialogContent,
   AlertDialogFooter,
   AlertDialogHeader,
@@ -24,7 +24,9 @@ import {ExclamationTriangleIcon} from "@radix-ui/react-icons";
 import { CopyButton } from "@/components/copy-button";
 import {EyeOff, Eye} from "lucide-react";
 import {useToggle} from "@/hooks/util/use-toggle";
+
 const validFormSchema = TokenCreateSchema
+
 interface TokenCreateFormProps {
   // onConfirm: (v: z.infer<typeof validFormSchema>)=> void,
   onCancel?: ()=> void,

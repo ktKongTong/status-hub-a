@@ -21,7 +21,7 @@ export const luciaVerifyMiddleware = (bypass: ByPassPath[] = []):MiddlewareHandl
   const token = lucia.readBearerToken(authorizationHeader ?? "")
   if(token) {
     const { dao } = getDB(c);
-    const res = await dao.userDAO.getUserAndTokenByToken(token!)
+    const res = await dao.userDAO.getValidUserAndTokenByToken(token!)
     if(res) {
       c.set("user", res.user);
       return next()

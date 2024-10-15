@@ -1,10 +1,6 @@
-import {  Namespace } from "@/interface";
-import {apikey} from "./apikey.v1.cr";
+import {  Namespace } from "@/types";
+import {credential as apikey} from "./apikey.v1.cr";
 
-interface SteamCredential {
-    apikey: string;
-    steamid: string;
-}
 
 
 export const namespace: Namespace = {

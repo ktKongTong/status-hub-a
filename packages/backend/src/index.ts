@@ -7,7 +7,7 @@ import {KVMiddleware} from "@/middleware/kv";
 import {QueueMiddleware} from "@/middleware/queue";
 import { logger } from "status-hub-shared/utils"
 import {apiReference} from "@scalar/hono-api-reference";
-import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
+import { OpenAPIHono, z } from "@hono/zod-openapi";
 
 import {loginRouter} from "@/router/auth/login";
 import {logoutRouter} from "@/router/auth/logout";

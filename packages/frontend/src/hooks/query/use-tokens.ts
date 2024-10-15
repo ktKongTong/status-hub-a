@@ -1,17 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
-  TokenCreateResult, TokenSelect
-} from 'status-hub-shared/models';
-import {z} from "zod";
+  TokenCreateResult, TokenInsert, TokenSelect
+} from 'status-hub-shared/models/vo';
 import ofetch from "@/lib/ofetch";
 import { useToast } from "@/hooks/use-toast";
 const API_BASE_URL = '/api/user/token';
 
-const createSchema = z.object({
-  identifier: z.string(),
-})
-
-type TokenCreate = z.infer<typeof createSchema>
 
 export const useTokens = () => {
   return useQuery<TokenSelect[]>({
@@ -23,7 +17,7 @@ export const useTokens = () => {
 export const useCreateToken = () => {
   const queryClient = useQueryClient();
   const {toast} = useToast();
-  return useMutation<TokenCreateResult, Error, TokenCreate>({
+  return useMutation<TokenCreateResult, Error, TokenInsert>({
     mutationFn: async (newSchema) =>  ofetch.post(API_BASE_URL, {json: newSchema}),
     onSuccess: () => {
       toast({title: '创建成功', type:'background'})

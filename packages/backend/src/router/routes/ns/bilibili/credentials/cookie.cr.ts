@@ -1,9 +1,7 @@
-import {  PlatformCredential } from "@/interface";
-import { CredentialRefresh } from "status-hub-shared/models";
+import {  PlatformCredential } from "@/types";
 import {RefreshFunction} from "@/types";
 
 export const credential: PlatformCredential = {
-  // 只在 fields 更改时变化
   platform: "bilibili",
   version: 1,
   credentialType: 'cookie',
@@ -18,14 +16,12 @@ export const credential: PlatformCredential = {
       isRequired: true,
       description: 'SESSDATA'
     }
-  },
-
+  }
 }
 
 
 
-export const refreshFunc: RefreshFunction = async (credential: CredentialRefresh) => {
-
+export const refreshFunc: RefreshFunction = async (credential) => {
   return {
     values: credential.credentialValues,
     isActive: true,

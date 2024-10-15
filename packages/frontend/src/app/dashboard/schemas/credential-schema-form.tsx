@@ -3,14 +3,13 @@ import {Button} from "@/components/ui/button";
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 import {Switch} from "@/components/ui/switch";
-import React, {FormEvent, useState} from "react";
-import {useCreateCredentialSchema} from "@/hooks/use-credential-schemas"
-import {CredentialSchemaInsert, CredentialSchemaInsertSchema, SchemaField} from "status-hub-shared/models";
+import React from "react";
+import {useCreateCredentialSchema} from "@/hooks/query/use-credential-schemas"
+import { CredentialSchemaInsert, CredentialSchemaInsertSchema } from "status-hub-shared/models/vo";
 import {DialogTriggerProps} from "@radix-ui/react-dialog";
 import {useFieldArray, useForm} from "react-hook-form";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {DialogBody} from "next/dist/client/components/react-dev-overlay/internal/components/Dialog";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {InfoCircledIcon} from "@radix-ui/react-icons";
 import {
@@ -71,7 +70,6 @@ export default function CredentialSchemaFormDialog({children,  ...rest}: Credent
       <DialogHeader>
         <DialogTitle>创建新凭证模式</DialogTitle>
       </DialogHeader>
-      <DialogBody>
         <Form {...form} >
           <form className={'grid gap-2'} onSubmit={form.handleSubmit(handleCreateSchema)}>
             <div className={' items-center flex justify-between gap-2'}>
@@ -301,7 +299,6 @@ export default function CredentialSchemaFormDialog({children,  ...rest}: Credent
             </div>
           </form>
         </Form>
-      </DialogBody>
     </DialogContent>
   </Dialog>
 

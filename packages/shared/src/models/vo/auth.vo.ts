@@ -1,5 +1,4 @@
 import {z} from "@hono/zod-openapi";
-import { generateMock } from '@anatine/zod-mock';
 
 export const SignInByEmailSchema = z.object({
   email: z.string().email(),
@@ -19,7 +18,6 @@ export const SignUpByEmailSchema = z.object({
 export const SendSignUpVerificationCodeSchema = z.object({
   email: z.string().email(),
 })
-
 
 export type SignInByEmail = z.infer<typeof SignInByEmailSchema>
 export type SignUpByEmail = z.infer<typeof SignUpByEmailSchema>

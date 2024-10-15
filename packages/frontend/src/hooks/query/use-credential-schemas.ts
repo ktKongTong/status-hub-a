@@ -1,7 +1,7 @@
-import {CredentialSchemaInsert, CredentialSchemaSelect, CredentialSchemaUpdate} from "status-hub-shared/models";
+import {CredentialSchemaInsert, CredentialSchemaSelect, CredentialSchemaUpdate} from "status-hub-shared/models/vo";
 import {create} from "zustand";
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
-import ofetch from "../lib/ofetch";
+import ofetch from "@/lib/ofetch";
 import {useEffect} from "react";
 import {useToast} from "@/hooks/use-toast";
 
@@ -68,8 +68,6 @@ export const useDeleteCredentialSchema = () => {
     },
   });
 };
-
-
 
 export const useCredentialSchemas = () => {
   const queryClient = useQueryClient();

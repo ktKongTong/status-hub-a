@@ -1,6 +1,6 @@
-import {PlatformCredential} from "@/interface";
+import {PlatformCredential} from "@/types";
 
-export const pat: PlatformCredential = {
+export const credential: PlatformCredential = {
   // 只在 fields 更改时变化
   platform: "github",
   version: 1,

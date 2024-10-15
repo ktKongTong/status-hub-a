@@ -2,8 +2,6 @@
 import {useTheme} from "next-themes";
 import {Button} from "@/components/ui/button";
 import {Sun} from "lucide-react";
-import {useRef} from "react";
-import {flushSync} from "react-dom";
 
 const ThemeButton = () => {
   const {theme, setTheme, systemTheme} = useTheme()

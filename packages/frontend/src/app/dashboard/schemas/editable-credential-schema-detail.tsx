@@ -4,11 +4,11 @@ import {Switch} from "@/components/ui/switch";
 import {Button} from "@/components/ui/button";
 import {
   useUpdateCredentialSchema
-} from "@/hooks/use-credential-schemas";
+} from "@/hooks/query/use-credential-schemas";
 import {
   CredentialSchemaSelect,
   CredentialSchemaUpdate, CredentialSchemaUpdateSchema,
-} from "status-hub-shared/models";
+} from "status-hub-shared/models/vo";
 import {Label} from "@/components/ui/label";
 import {useFieldArray, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";

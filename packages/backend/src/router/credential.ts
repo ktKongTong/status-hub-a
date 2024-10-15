@@ -1,6 +1,6 @@
 import { OpenAPIHono, z} from "@hono/zod-openapi";
 import R from '@/utils/openapi'
-import {credentialInsertOpenAPISchema, credentialOpenAPISchema, credentialUpdateOpenAPISchema} from "status-hub-shared/models";
+import {credentialInsertOpenAPISchema, credentialOpenAPISchema, credentialUpdateOpenAPISchema} from "status-hub-shared/models/vo";
 import {getDB} from "@/middleware/db";
 import {getSession} from "@/middleware/auth";
 const credentialRouter = new OpenAPIHono()

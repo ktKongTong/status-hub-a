@@ -1,8 +1,7 @@
 import {RefreshFunction} from "@/types";
-import {CredentialRefresh} from "status-hub-shared/models";
 import { GitHub } from "arctic";
 
-export const refreshFunc : RefreshFunction = async (credential: CredentialRefresh, env?:any)=> {
+export const refreshFunc : RefreshFunction = async (credential, env?:any)=> {
   const github = new GitHub(process.env.GITHUB_CLIENT_ID!, process.env.GITHUB_CLIENT_SECRET!, process.env.GITHUB_REDIRECT_URL!);
   const res = await github.refreshAccessToken(credential.credentialValues['refreshToken'] as string)
   credential.credentialValues['accessToken'] = res.accessToken()

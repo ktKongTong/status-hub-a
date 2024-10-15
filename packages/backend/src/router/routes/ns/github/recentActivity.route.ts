@@ -1,8 +1,8 @@
 import {Context} from "hono";
-import {CredentialType} from "@/interface";
 import {createGitHubAPI} from "./github";
 import {convertGitHubEvent} from "./utils";
 import {getCredentialByPlatformAndType} from "@/router/routes/util";
+import {CredentialType} from "status-hub-shared/models";
 
 const handler = async (c:Context) => {
   const credentials = await getCredentialByPlatformAndType(c, 'github', ['apiToken'])
@@ -16,6 +16,6 @@ const handler = async (c:Context) => {
 export const route =  {
   path: '/activity/recent',
   raw: true,
-  usableCredentialType: ['apiToken'] as CredentialType[],
+  supportCredentialType: ['apiToken'] as CredentialType[],
   handler: handler
 }

@@ -1,13 +1,14 @@
 import { BetterSQLite3Database } from "drizzle-orm/better-sqlite3";
 import * as tables from './schema';
 import {eq, and, sql, inArray} from "drizzle-orm";
-import {Credential, CredentialRefresh, SchemaField} from "status-hub-shared/models";
+import {Credential, CredentialRefresh, SchemaField} from "status-hub-shared/models/dbo";
 import {DBError} from "@/errors";
+import {CredentialType} from "status-hub-shared/models";
 
 export interface ICredentialDAO {
   addCredential(userId: string, schemaId: string, schemaVersion: number, credentialValues: Record<string, string | number | boolean>): Promise<void>;
   getCredentialByPlatform(userId: string, platform: string): Promise<Credential[]>
-  getCredentialByPlatformAndType(userId: string, platform: string, type: string[]): Promise<Credential[]>
+  getCredentialByPlatformAndType(userId: string, platform: string, type: CredentialType[]): Promise<Credential[]>
   getNeedRefreshCredentials(): Promise<CredentialRefresh[]>
   getCredential(userId: string): Promise<Credential[]>;
   updateCredential(credentialId: number, credentialValues: Record<string, string | number | boolean>, refresh?: boolean): Promise<void>
@@ -238,7 +239,7 @@ export class CredentialDAO implements ICredentialDAO {
       .where(eq(tables.platformCredentials.id, credentialId));
   }
 
-  async getCredentialByPlatformAndType(userId: string, platform: string, types: string[]): Promise<Credential[]> {
+  async getCredentialByPlatformAndType(userId: string, platform: string, types: CredentialType[]): Promise<Credential[]> {
     const result = await this.db.select({
       userId: tables.platformCredentials.userId,
       id: tables.platformCredentials.id,

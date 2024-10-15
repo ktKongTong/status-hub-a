@@ -1,7 +1,4 @@
-import {Job, Queue} from 'bullmq'
-import { getDB } from "@/middleware/db";
-import {CredentialRefresh} from "status-hub-shared/models";
-import {GitHub, Spotify} from "arctic";
+import { Queue } from 'bullmq'
 import {logger} from "status-hub-shared/utils";
 import { HonoAdapter } from "@bull-board/hono";
 import {serveStatic} from "@hono/node-server/serve-static";
@@ -51,7 +48,6 @@ export { bulLBoardRouter,onBullBoardStartup }
 
 import { Worker } from 'bullmq';
 import {JobQueue, Task} from "@/job/interface";
-import {SystemOAuthTokenJob} from "@/job/token-refresh/oauth-token-refresh";
 import {Every5minTokenRefreshCheckerJob} from "@/job/token-refresh/every-5-min-refresh-checker";
 import {SystemRefreshTask} from "@/job/token-refresh/system-refresh-task";
 

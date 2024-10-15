@@ -1,8 +1,8 @@
 import {Context} from "hono";
 import {createSteamAPI} from "./steam";
-import {CredentialType} from "@/interface";
 import {getCredentialByPlatformAndType} from "@/router/routes/util";
 import {SteamAPIKeyCredential} from "@/router/routes/ns/steam/apikey.v1.cr";
+import {CredentialType} from "status-hub-shared/models";
 
 const handler = async (c:Context) => {
   const steamid = c.req.param('id')
@@ -34,6 +34,6 @@ const handler = async (c:Context) => {
 export const route =  {
   path: '/activity/recent',
   raw: true,
-  usableCredentialType: ['apiToken'] as CredentialType[],
+  supportCredentialType: ['apiToken'] as CredentialType[],
   handler: handler
 }

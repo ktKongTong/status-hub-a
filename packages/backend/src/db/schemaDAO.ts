@@ -5,7 +5,7 @@ import {
     CredentialSchemaUpdate,
     CredentialSchemaSelect,
     CredentialSchemaInsert,
-} from "status-hub-shared/models";
+} from "status-hub-shared/models/dbo";
 import {createId} from "@/utils";
 
 export interface ISchemaDAO {

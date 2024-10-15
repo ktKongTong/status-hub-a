@@ -2,22 +2,25 @@ import {BetterSQLite3Database} from "drizzle-orm/better-sqlite3";
 import {
   accounts,
   users,
-  UserAccountInsert,
-  UserAccountSelect, UserAndTokenSelect,
-  UserSelect, UserTokenCreateResult,
-  UserTokenInsert, UserTokenSelect,
   verificationTokens
 } from "./schema";
+
 import {and, eq, sql} from "drizzle-orm";
 import {verifyPassword} from "@/utils";
-
+import {
+  UserAccountInsert,
+  UserAccountSelect, UserAndTokenSelect,
+  UserSelect,
+  UserTokenInsert, UserTokenSelect,
+} from 'status-hub-shared/models/dbo'
 export interface IUserDAO {
   getUserByAccountId(provider: string, platformId: string): Promise<UserAccountSelect | null>;
   createNewUser(values: UserAccountInsert): Promise<UserAccountSelect>;
   getUserByUserId(userId: string): Promise<UserSelect | null>;
-  createUserToken(token: UserTokenInsert): Promise<UserTokenCreateResult>;
+  createUserToken(token: UserTokenInsert): Promise<UserTokenSelect>;
   getUserTokensByUserId(userId: string):Promise<UserTokenSelect[]>;
   getUserAndTokenByToken(token: string): Promise<UserAndTokenSelect | null>;
+  getValidUserAndTokenByToken(token: string): Promise<UserAndTokenSelect | null>;
   checkIfTokenIdentifierExist(identifier: string,userId: string): Promise<boolean>
   removeToken(token: string, userId: string): Promise<boolean>;
   removeTokenByIdentifier(identifier: string, userId: string): Promise<boolean>;
@@ -86,7 +89,7 @@ export class UserDAO implements IUserDAO {
     return res[0] ?? null
   }
 
-  async createUserToken(token: UserTokenInsert): Promise<UserTokenCreateResult> {
+  async createUserToken(token: UserTokenInsert): Promise<UserTokenSelect> {
     const res = await this.db.insert(verificationTokens).values(token).returning()
     return res[0]
   }
@@ -98,20 +101,20 @@ export class UserDAO implements IUserDAO {
   async getUserAndTokenByToken(token: string): Promise<UserAndTokenSelect | null> {
     const res = await this.db.select({
       user: users,
-      token: {
-        identifier: verificationTokens.identifier,
-        userId: verificationTokens.userId,
-        expires: verificationTokens.expires,
-        createdAt: verificationTokens.createdAt,
-        updatedAt: verificationTokens.updatedAt,
-      }
+      token: verificationTokens
     }).from(verificationTokens)
+      .innerJoin(users, eq(users.id, verificationTokens.userId))
+      .where(and(eq(verificationTokens.token, token)))
+    return res[0] ?? null
+  }
+
+  async getValidUserAndTokenByToken(token: string): Promise<UserAndTokenSelect | null> {
+    const res = await this.db.select({user: users, token: verificationTokens}).from(verificationTokens)
       .innerJoin(users, eq(users.id, verificationTokens.userId))
       .where(and(
         eq(verificationTokens.token, token),
         sql`${verificationTokens.createdAt} + ${verificationTokens.expires} > unixepoch()`
       ))
-
     return res[0] ?? null
   }
   async checkIfTokenIdentifierExist(identifier: string,userId: string): Promise<boolean> {

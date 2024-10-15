@@ -1,5 +1,5 @@
 import {JobHandler} from "@/job/job-handler";
-import {CredentialRefresh} from "status-hub-shared/models";
+import {CredentialRefresh} from "status-hub-shared/models/dbo";
 import {Connection} from "@/job/interface";
 import {Job} from "bullmq";
 import {getDB} from "@/middleware/db";

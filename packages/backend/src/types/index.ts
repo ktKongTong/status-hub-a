@@ -1,53 +1,29 @@
+import {CredentialRefresh} from "status-hub-shared/models/dbo";
+import {CredentialStatus, CredentialType} from "status-hub-shared/models";
 import {Context} from "hono";
-import {CredentialRefresh} from "status-hub-shared/models";
 
-export type CredentialType = 'cookie' | 'oauth' | 'apiToken' | 'credential' | 'oidc' | 'none'
+
 
 export interface Namespace {
   platform: string
   category: string[]
   supportCredentials: PlatformCredential[]
-  // routes: Record<string, RouteItem<string>>
 }
 
-// define schema
-export interface PlatformCredential {
-  platform: string
-  version: number
-  credentialType: CredentialType;
-  autoRefreshable: boolean;
-  maximumRefreshIntervalInSec?: number;
-  refreshLogic?: string;
-  availablePermissions?: string[],
-  permissions?: string[],
-  fields: Record<string, CredentialField>;
-}
-
-
-// 'ok' | 'out-date' | 'in-active' | 'unknown' | 'refreshing'
-export const CredentialStatusArr:readonly string[] = ['ok', 'in-active', 'pending', 'unknown', 'out-date']
-export type CredentialStatus = 'ok' | 'in-active' | 'pending' | 'unknown' | 'out-date'
-// ok -> invalid
-//
-
-export interface CredentialField {
+interface CredentialField {
   type: 'string' | 'number' | 'boolean'
   isRequired: boolean
   description: string
 }
 
-export interface RouteItem<T extends string = ''> {
-  path: T;
-  usableCredentialType: CredentialType[];
-  handler: (ctx:Context) => Response
-}
 
-export type RefreshFunction = (credential: CredentialRefresh, env?:any) => Promise<{
-  values: Record<string, string | number | boolean>,
-  isActive: boolean,
-  status: CredentialStatus,
-  ok: boolean,
-}>
+
+export type RouteItem<T extends string = string> = {
+  path: T;
+  raw?: boolean;
+  supportCredentialType?: string[];
+  handler: (ctx:Context) => Promise<any>
+};
 
 export const generateCredentialSchemaAndFieldsFromPlatformCredential = (c : PlatformCredential) => {
   const id = `system-${c.platform}-${c.credentialType}`
@@ -72,6 +48,7 @@ export const generateCredentialSchemaAndFieldsFromPlatformCredential = (c : Plat
     schemaVersion: c.version,
     credentialType: c.credentialType,
     autoRefreshable: c.autoRefreshable,
+    description: c.description,
     maximumRefreshIntervalInSec: c.maximumRefreshIntervalInSec ?? 0,
     available: true,
     availablePermissions: c.availablePermissions?.join(",") ?? '',
@@ -81,6 +58,7 @@ export const generateCredentialSchemaAndFieldsFromPlatformCredential = (c : Plat
     schemaFields: credentialFields,
     status: 'ok',
     createdBy: 'system' as const,
+
   }
   return {
     schema:credentialSchema,
@@ -89,3 +67,26 @@ export const generateCredentialSchemaAndFieldsFromPlatformCredential = (c : Plat
 }
 
 export type SystemSchemaInsert = ReturnType<typeof generateCredentialSchemaAndFieldsFromPlatformCredential>;
+
+// define schema
+export interface PlatformCredential {
+  platform: string
+  version: number
+  credentialType: CredentialType;
+  autoRefreshable: boolean;
+  maximumRefreshIntervalInSec?: number;
+  description: string;
+  expectExpires?: number;
+  // a user defined script
+  refreshLogic?: string;
+  availablePermissions?: string[],
+  permissions?: string[],
+  fields: Record<string, CredentialField>;
+}
+
+export type RefreshFunction = (credential: CredentialRefresh, env?:any) => Promise<{
+  values: Record<string, string | number | boolean>,
+  isActive: boolean,
+  status: CredentialStatus,
+  ok: boolean,
+}>

@@ -2,7 +2,9 @@ import {JobHandler} from "@/job/job-handler";
 import {Job} from "bullmq";
 import {getDB} from "@/middleware/db";
 import {GitHub, Spotify} from "arctic";
-import {CredentialRefresh} from "status-hub-shared/models";
+
+import {CredentialRefresh} from "status-hub-shared/models/dbo";
+
 import {logger} from "status-hub-shared/utils";
 import {Connection} from "@/job/interface";
 

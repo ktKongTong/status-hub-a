@@ -4,7 +4,7 @@ import {Job} from "bullmq";
 import {getDB} from "@/middleware/db";
 import {logger} from "status-hub-shared/utils";
 import {RefreshFunction} from "@/types";
-import {CredentialRefresh} from "status-hub-shared/models";
+import {CredentialRefresh} from "status-hub-shared/models/dbo";
 import {credentialRefreshFuncs} from "@/route-registry";
 
 

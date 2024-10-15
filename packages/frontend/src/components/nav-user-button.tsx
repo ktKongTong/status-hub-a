@@ -1,11 +1,10 @@
 "use client"
-import {useSession} from "@/hooks/query/useSession";
+import {useSession} from "@/hooks/query/use-session";
 import SignIn from "@/components/auth/sign-in";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import {Button} from "@/components/ui/button";

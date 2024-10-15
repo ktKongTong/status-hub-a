@@ -1,19 +1,16 @@
 'use client'
 
-import React, {useState} from "react";
+import React from "react";
 import {Button} from "@/components/ui/button";
-import { useDeleteToken, useTokens } from "@/hooks/use-tokens";
+import { useDeleteToken, useTokens } from "@/hooks/query/use-tokens";
 import TokenCreateForm from "@/app/dashboard/token/token-create-form";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import DeleteConfirmFormDialog from "@/components/delete-confirm-form-dialog";
 import {convertTimeToShortStr} from "@/app/dashboard/token/sec-converter";
 
 export default function Home() {
-  const [curToken, setCurToken] = useState<string|null>(null)
   const tokenDeleter = useDeleteToken()
-
   const {data} = useTokens()
-
   return (
     <div className="">
       <div className={'flex items-center justify-between py-8'}>

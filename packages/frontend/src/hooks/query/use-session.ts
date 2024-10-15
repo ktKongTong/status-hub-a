@@ -1,7 +1,7 @@
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import ofetch from "@/lib/ofetch";
 import {useRouter} from "next/navigation";
-import {SendSignUpVerificationCode, SignInByEmail, SignUpByEmail} from "status-hub-shared/models";
+import {SendSignUpVerificationCode, SignInByEmail, SignUpByEmail} from "status-hub-shared/models/vo";
 
 const authFetch = ofetch.extend({
   retry: false,

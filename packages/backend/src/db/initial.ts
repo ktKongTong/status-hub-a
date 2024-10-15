@@ -1,4 +1,4 @@
-import {SystemSchemaInsert} from "@/interface";
+import {SystemSchemaInsert} from "@/types";
 import {credentialSchema, credentialSchemaFields} from "./schema";
 import {and, eq, getTableColumns, SQL, sql} from "drizzle-orm";
 import {SQLiteTable} from "drizzle-orm/sqlite-core";

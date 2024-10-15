@@ -3,8 +3,7 @@ import { BetterSQLite3Database } from "drizzle-orm/better-sqlite3";
 import {IUserDAO, UserDAO} from "./userDAO";
 import { ISchemaDAO, SchemaDAO } from "./schemaDAO";
 import { ICredentialDAO, CredentialDAO } from "./credentialDAO";
-import {BizError, DbError} from "@/errors";
-import {SqliteError} from "better-sqlite3";
+import { DbError } from "@/errors";
 
 export class DAO {
 

@@ -5,7 +5,7 @@ import {getDB} from "@/middleware/db";
 import {
   getSession,
 } from "@/middleware/auth";
-import {buildCredentialValues} from "@/utils/credential";
+import {buildCredentialValues} from "./util";
 
 import oauthAdapter from "@/router/routes/oauth-adapter";
 import {NotFoundError} from "@/errors";
@@ -22,10 +22,6 @@ app.get('/platforms', async (c)=> {
   return c.json({ })
 })
 
-
-
-// 路由到指定的平台API，然后
-
 app.use('/:platform/*', async (c, next) => {
   const platform = c.req.param('platform')
   const {dao: db} = getDB(c)
@@ -39,13 +35,5 @@ app.use('/:platform/*', async (c, next) => {
   c.set('currentCredentialValue', credentialValues)
   return next()
 })
-
-
-
-
-app
-// .route('/', steamHono)
-// .route('/', spotifyRouter)
-// .route('/', githubRouter)
 
 export default app

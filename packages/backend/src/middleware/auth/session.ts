@@ -15,7 +15,7 @@ export const luciaSessionMiddleware = ():MiddlewareHandler => async (c ,next) =>
   const authorizationHeader = c.req.header("Authorization")
   const token = lucia.readBearerToken(authorizationHeader ?? "")
   if(token) {
-    const res = await dao.userDAO.getUserAndTokenByToken(token!)
+    const res = await dao.userDAO.getValidUserAndTokenByToken(token!)
     if(res) {
       c.set("user", res.user);
       return next()

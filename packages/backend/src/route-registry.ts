@@ -4,7 +4,7 @@ import {
   Namespace, PlatformCredential,
   RouteItem,
   SystemSchemaInsert
-} from "./interface";
+} from "@/types";
 
 import {directoryImport} from "directory-import";
 import {getCurrentPath} from "@/utils/path";
@@ -19,19 +19,21 @@ let modules: Record<string, { namespace: Namespace }> = {};
 const __dirname = getCurrentPath(import.meta.url);
 
 let namespaces: Record<string, Namespace & {routes: Record<string, RouteItem & {location: string}>}> = {};
+
 let sysSchemas: Record<string, SystemSchemaInsert> = {};
 
 let credentialSchemas: Record<string, SystemSchemaInsert & {location: string,namespace:string, refreshFunc?: RefreshFunction}> = {}
 let credentialRefreshFuncs: Record<string, RefreshFunction> = {}
+
+type RouteModuleContent = { namespace: Namespace }
+  | {route: RouteItem}
+  | {credential: PlatformCredential, refreshFunc?: RefreshFunction}
 
 switch (process.env.NODE_ENV) {
   case 'test':
   case 'production':
       namespaces = JSON.parse(fs.readFileSync(path.join(__dirname, "../assets/build/routes.json")).toString());
       credentialSchemas = JSON.parse(fs.readFileSync(path.join(__dirname, "../assets/build/credential-schemas.json")).toString());
-    // namespaces = await import('../assets/build/routes.json', { assert: { type: "json" }});
-    //@ts-ignore
-    // console.log("namespaces", namespaces);
     break;
   default:
     modules = directoryImport({
@@ -43,22 +45,16 @@ switch (process.env.NODE_ENV) {
 
 if (Object.keys(modules).length) {
   for (const module in modules) {
-    const content = modules[module] as
-      { namespace: Namespace } |
-      {route: RouteItem} |
-      {credential: PlatformCredential, refreshFunc?: RefreshFunction}
-    ;
+    const content = modules[module] as RouteModuleContent
     const namespace = module.split(/[/\\]/)[1];
     if ('namespace' in content) {
       namespaces[namespace] = Object.assign({ routes: {}, supportCredentials: [] }, namespaces[namespace], content.namespace);
-      const res = namespaces[namespace]
-      // generateCredentialSchemaAndFieldsFromPlatformCredential
-      const cArr = res.supportCredentials.map(it => generateCredentialSchemaAndFieldsFromPlatformCredential(it))
-      cArr.forEach(credential => {
-        const id = credential.schema.id
-        sysSchemas[id] = credential;
-      })
-    }else if ('route' in content) {
+      namespaces[namespace]
+        .supportCredentials
+        .map(it => generateCredentialSchemaAndFieldsFromPlatformCredential(it))
+        .forEach((cur)=> sysSchemas[cur.schema.id] = cur)
+    }
+    else if ('route' in content) {
       if (!namespaces[namespace]) {
         namespaces[namespace] = {
           platform: namespace,
@@ -80,7 +76,8 @@ if (Object.keys(modules).length) {
           location: module.split(/[/\\]/).slice(2).join('/'),
         };
       }
-    }else if('credential' in content) {
+    }
+    else if('credential' in content) {
       const cr = content.credential
       const schema = generateCredentialSchemaAndFieldsFromPlatformCredential(cr)
       credentialSchemas[`system-${cr.platform}-${cr.credentialType}`] = {
@@ -97,11 +94,9 @@ if (Object.keys(modules).length) {
 }else {
   Object.keys(namespaces).forEach(ns => {
     const namespace = namespaces[ns];
-    const cArr = namespace.supportCredentials.map(it => generateCredentialSchemaAndFieldsFromPlatformCredential(it))
-    cArr.forEach(credential => {
-      const id = credential.schema.id
-      sysSchemas[id] = credential;
-    })
+    namespace.supportCredentials
+      .map(it => generateCredentialSchemaAndFieldsFromPlatformCredential(it))
+      .forEach((cur)=> sysSchemas[cur.schema.id] = cur)
   })
   for(const cr of Object.keys(credentialSchemas)) {
     let credential = credentialSchemas[cr];
@@ -131,7 +126,7 @@ Object.keys(namespaces)
             const { route } = await import(`./router/routes/ns/${namespace}/${location}`);
             r.handler = route.handler;
           }
-          return r.handler(ctx)
+        return r.handler(ctx)
       };
       h.get(r.path, wrappedHandler)
     })

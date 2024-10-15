@@ -6,7 +6,7 @@ import {
   CredentialSchemaInsertSchema,
   CredentialSchemaOpenAPISchema,
   CredentialSchemaUpdateOpenApiSchema,
-} from "status-hub-shared/models";
+} from "status-hub-shared/models/vo";
 import {getSession} from "@/middleware/auth";
 
 const credentialSchemaRouter = new OpenAPIHono()

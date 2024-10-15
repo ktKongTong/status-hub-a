@@ -6,16 +6,15 @@ import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import {Separator} from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import {GitHubLogoIcon} from "@radix-ui/react-icons";
 
 import { useMeasure } from "@uidotdev/usehooks";
+import {useSignInOrSignUp} from "@/hooks/query/use-session";
 
-import {SignUpByEmailSchema, SignInByEmailSchema, SignUpByEmail, SignInByEmail} from "status-hub-shared/models";
-import {useSignInOrSignUp} from "@/hooks/query/useSession";
-import {GitHubLogoIcon} from "@radix-ui/react-icons";
-import {Separator} from "@/components/ui/separator";
-
+import { SignUpByEmailSchema, SignInByEmailSchema, SignUpByEmail, SignInByEmail } from "status-hub-shared/models/vo";
 
 const AuthModal = () => {
   const [isOpen, setIsOpen] = useState(false);

@@ -3,7 +3,7 @@ import {sqliteTable, text, integer, foreignKey, blob} from 'drizzle-orm/sqlite-c
 import { users } from './users';
 import { credentialSchema } from './credential-schema';
 import {sql} from "drizzle-orm";
-import {CredentialStatusArr} from "@/types";
+import {CredentialStatusArr} from "status-hub-shared/models";
 
 const credentialStatusEnum = CredentialStatusArr as readonly [string, ...string[]]
 

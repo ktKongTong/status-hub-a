@@ -1,7 +1,6 @@
-import {PlatformCredential} from "@/interface";
+import {PlatformCredential} from "@/types";
 import {RefreshFunction} from "@/types";
 import {Spotify} from "arctic";
-import {CredentialRefresh} from "status-hub-shared/models";
 
 export const credential: PlatformCredential = {
   // 只在 fields 更改时变化
@@ -31,7 +30,7 @@ export const credential: PlatformCredential = {
 }
 
 
-export const refreshFunc : RefreshFunction = async (credential: CredentialRefresh, env?:any)=> {
+export const refreshFunc : RefreshFunction = async (credential, env?:any)=> {
   const spotify = new Spotify(process.env.SPOTIFY_CLIENT_ID!, process.env.SPOTIFY_CLIENT_SECRET!, process.env.SPOTIFY_REDIRECT_URL!);
   const res = await spotify.refreshAccessToken(credential.credentialValues['refreshToken'] as string)
   credential.credentialValues['accessToken'] = res.accessToken()

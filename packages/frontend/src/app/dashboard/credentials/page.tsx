@@ -1,15 +1,14 @@
 'use client'
 import React, { useState } from 'react';
-import { useCredentials, useDeleteCredential } from '@/hooks/use-credentials';
+import { useCredentials, useDeleteCredential } from '@/hooks/query/use-credentials';
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 
-import { Credential } from 'status-hub-shared/models'
+import { Credential } from 'status-hub-shared/models/vo'
 import CredentialEditor from "@/app/dashboard/credentials/editor";
 import CredentialCreateForm from "@/app/dashboard/credentials/credential-create-form";
-import {useCredentialSchemas} from "@/hooks/use-credential-schemas";
-import CredentialSchemaFormDialog from "@/app/dashboard/schemas/credential-schema-form";
+import {useCredentialSchemas} from "@/hooks/query/use-credential-schemas";
 
 
 export default function CredentialManagement() {
