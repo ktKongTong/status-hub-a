@@ -9,10 +9,10 @@ FROM builder AS build
 COPY . /usr/src/app
 WORKDIR /usr/src/app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm run --filter='!status-hub-frontend' -r build
+RUN pnpm run  -r build
 RUN pnpm install
 RUN pnpm deploy --filter=status-hub-backend --prod /prod/status-hub-backend
-# RUN pnpm deploy --filter=status-hub-frontend --prod /prod/status-hub-frontend
+RUN pnpm deploy --filter=status-hub-frontend --prod /prod/status-hub-frontend
 
 FROM base AS status-hub-frontend
 COPY --from=build /prod/status-hub-frontend /prod/status-hub-frontend

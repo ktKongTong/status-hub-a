@@ -22,8 +22,12 @@ services:
       - SPOTIFY_CLIENT_ID=client_id
       - SPOTIFY_CLIENT_SECRET=secret
       - SPOTIFY_REDIRECT_URL=http://localhost:8001/api/route/adapter/spotify/callback
+      - RESEND_API_KEY=resend_api_key
+      - RESEND_SENDER_ADDR=no-reply@example.com
+
       - BULLMQ_REDIS_HOST=redis-status-hub-test
       - BULLMQ_REDIS_PORT=6379
+      - BULL_MQ_PANEL_PORT=8419
       - PORT=8000
       - NODE_ENV=test
     networks:
