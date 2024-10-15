@@ -16,3 +16,13 @@ export class DbError extends Error {
       }
     }
 }
+
+
+export class DBError extends Error {
+  message: string
+  constructor(message: any) {
+    super("DBError");
+    this.message = message;
+    this.name = "DbError";
+  }
+}

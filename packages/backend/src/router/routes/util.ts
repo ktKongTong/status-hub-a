@@ -23,9 +23,14 @@ export async function getCredential<T>(c:Context, platform: string) {
 export async function getCredentialByPlatformAndType(c:Context, platform: string, supportType: CredentialType[] | undefined): Promise<Credential[]> {
   const {dao: db} = getDB(c)
   const { user } = getSession(c)
-  const credentials = await db.credentialDAO.getCredentialByPlatform(user!.id, platform)
+  let credentials:Credential[] = []
+  if(supportType) {
+    credentials = await db.credentialDAO.getCredentialByPlatformAndType(user!.id, platform, supportType)
+  }else {
+    credentials = await db.credentialDAO.getCredentialByPlatform(user!.id, platform)
+  }
   if (credentials.length === 0) {
-    throw new NotFoundError(`No ${platform} credentials found.`)
+    throw new NotFoundError(`${platform} credentials not found.`)
   }
   return credentials
 }

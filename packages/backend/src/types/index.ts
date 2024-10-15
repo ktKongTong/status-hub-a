@@ -17,12 +17,18 @@ export interface PlatformCredential {
   credentialType: CredentialType;
   autoRefreshable: boolean;
   maximumRefreshIntervalInSec?: number;
-  // a user defined script?
   refreshLogic?: string;
   availablePermissions?: string[],
   permissions?: string[],
   fields: Record<string, CredentialField>;
 }
+
+
+// 'ok' | 'out-date' | 'in-active' | 'unknown' | 'refreshing'
+export const CredentialStatusArr:readonly string[] = ['ok', 'in-active', 'pending', 'unknown', 'out-date']
+export type CredentialStatus = 'ok' | 'in-active' | 'pending' | 'unknown' | 'out-date'
+// ok -> invalid
+//
 
 export interface CredentialField {
   type: 'string' | 'number' | 'boolean'
@@ -35,8 +41,6 @@ export interface RouteItem<T extends string = ''> {
   usableCredentialType: CredentialType[];
   handler: (ctx:Context) => Response
 }
-
-export type CredentialStatus = 'ok' | 'out-date' | 'in-active' | 'unknown' | 'refreshing'
 
 export type RefreshFunction = (credential: CredentialRefresh, env?:any) => Promise<{
   values: Record<string, string | number | boolean>,
@@ -77,7 +81,6 @@ export const generateCredentialSchemaAndFieldsFromPlatformCredential = (c : Plat
     schemaFields: credentialFields,
     status: 'ok',
     createdBy: 'system' as const,
-
   }
   return {
     schema:credentialSchema,

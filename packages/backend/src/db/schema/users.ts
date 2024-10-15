@@ -1,13 +1,12 @@
 import {integer, primaryKey, sqliteTable, text, unique, uniqueKeyName} from "drizzle-orm/sqlite-core";
-import {z} from "zod";
-import {createInsertSchema, createSelectSchema} from "drizzle-zod";
 import {sql} from "drizzle-orm";
+import {createId} from "@/utils";
 
 
 export const users = sqliteTable("user", {
   id: text("id")
     .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
+    .$defaultFn(() => createId("u")),
   name: text("name").notNull(),
   email: text("email").unique(),
   emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),

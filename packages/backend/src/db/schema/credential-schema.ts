@@ -1,6 +1,6 @@
 
 import { sqliteTable, text, integer, primaryKey, foreignKey } from 'drizzle-orm/sqlite-core';
-
+import {sql} from "drizzle-orm";
 // 系统表
 export const credentialSchema = sqliteTable('credential_schema', {
     id: text('id').notNull(),
@@ -44,19 +44,17 @@ export const credentialSchemaFields = sqliteTable('credential_schema_fields', {
     }).onDelete('cascade')
 }));
 
+//
+// import { z } from 'zod';
+// import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 
-import { z } from 'zod';
-import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
-import {sql} from "drizzle-orm";
+// export const insertCredentialSchemaSchema = createInsertSchema(credentialSchema);
+// export const selectCredentialSchemaSchema = createSelectSchema(credentialSchema);
+// export const insertCredentialSchemaFieldsSchema = createInsertSchema(credentialSchemaFields);
+// export const selectCredentialSchemaFieldsSchema = createSelectSchema(credentialSchemaFields);
 
-
-export const insertCredentialSchemaSchema = createInsertSchema(credentialSchema);
-export const selectCredentialSchemaSchema = createSelectSchema(credentialSchema);
-export const insertCredentialSchemaFieldsSchema = createInsertSchema(credentialSchemaFields);
-export const selectCredentialSchemaFieldsSchema = createSelectSchema(credentialSchemaFields);
-
-
-export type CredentialSchemaInsert = z.infer<typeof insertCredentialSchemaSchema>;
-export type CredentialSchemaSelect = z.infer<typeof selectCredentialSchemaSchema>;
-export type CredentialSchemaFieldsInsert = z.infer<typeof insertCredentialSchemaFieldsSchema>;
-export type CredentialSchemaFieldsSelect = z.infer<typeof selectCredentialSchemaFieldsSchema>;
+//
+// export type CredentialSchemaInsert = z.infer<typeof insertCredentialSchemaSchema>;
+// export type CredentialSchemaSelect = z.infer<typeof selectCredentialSchemaSchema>;
+// export type CredentialSchemaFieldsInsert = z.infer<typeof insertCredentialSchemaFieldsSchema>;
+// export type CredentialSchemaFieldsSelect = z.infer<typeof selectCredentialSchemaFieldsSchema>;

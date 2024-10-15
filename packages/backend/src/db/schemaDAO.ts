@@ -6,7 +6,7 @@ import {
     CredentialSchemaSelect,
     CredentialSchemaInsert,
 } from "status-hub-shared/models";
-import {integer, text} from "drizzle-orm/sqlite-core";
+import {createId} from "@/utils";
 
 export interface ISchemaDAO {
     getCredentialSchemas(): Promise<CredentialSchemaSelect[]>;
@@ -78,7 +78,7 @@ export class SchemaDAO implements ISchemaDAO {
     }
 
     async createCredentialSchema(schema: CredentialSchemaInsert,userId: string): Promise<CredentialSchemaSelect> {
-        const id = crypto.randomUUID()
+        const id = createId('schema')
         //
         const result = await this.db.transaction(async (tx) => {
 

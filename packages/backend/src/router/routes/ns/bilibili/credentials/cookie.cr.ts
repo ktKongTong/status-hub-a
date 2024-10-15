@@ -25,6 +25,7 @@ export const credential: PlatformCredential = {
 
 
 export const refreshFunc: RefreshFunction = async (credential: CredentialRefresh) => {
+
   return {
     values: credential.credentialValues,
     isActive: true,

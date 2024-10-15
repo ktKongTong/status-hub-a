@@ -1,9 +1,15 @@
 import {generateId} from "lucia";
 import bcrypt from 'bcryptjs'
 export const createUid =()=> {
-  return generateId(15);
+  return createId("u");
 }
 
+export const createId =(prefix?: string,size?: number)=> {
+  if(prefix) {
+    return prefix + "_" + generateId(size ?? 15);
+  }
+  return generateId(15)
+}
 export function generateVerificationCode() {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let result = '';

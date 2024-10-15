@@ -1,14 +1,13 @@
 import { BetterSQLite3Database } from "drizzle-orm/better-sqlite3";
 import * as tables from './schema';
-import {eq, and, sql, lte} from "drizzle-orm";
+import {eq, and, sql, inArray} from "drizzle-orm";
 import {Credential, CredentialRefresh, SchemaField} from "status-hub-shared/models";
+import {DBError} from "@/errors";
 
 export interface ICredentialDAO {
   addCredential(userId: string, schemaId: string, schemaVersion: number, credentialValues: Record<string, string | number | boolean>): Promise<void>;
   getCredentialByPlatform(userId: string, platform: string): Promise<Credential[]>
   getCredentialByPlatformAndType(userId: string, platform: string, type: string[]): Promise<Credential[]>
-  // getCredentials That need refresh
-
   getNeedRefreshCredentials(): Promise<CredentialRefresh[]>
   getCredential(userId: string): Promise<Credential[]>;
   updateCredential(credentialId: number, credentialValues: Record<string, string | number | boolean>, refresh?: boolean): Promise<void>
@@ -84,7 +83,6 @@ export class CredentialDAO implements ICredentialDAO {
     }
 
   async addCredential(userId: string, schemaId: string, schemaVersion: number, credentialValues: Record<string, string | number | boolean>): Promise<void> {
-    // const tx = this.db
     await this.db.transaction(async (tx) => {
       const credentialSchema = await tx.select()
         .from(tables.credentialSchema)
@@ -93,7 +91,7 @@ export class CredentialDAO implements ICredentialDAO {
           eq(tables.credentialSchema.schemaVersion, schemaVersion),
         ));
       if (credentialSchema.length === 0) {
-        throw new Error('Credential schema not found');
+        throw new DBError('Credential schema not found');
       }
       await this.db.insert(tables.platformCredentials).values({
         userId: userId,
@@ -240,7 +238,49 @@ export class CredentialDAO implements ICredentialDAO {
       .where(eq(tables.platformCredentials.id, credentialId));
   }
 
-  getCredentialByPlatformAndType(userId: string, platform: string, type: string[]): Promise<Credential[]> {
-    return Promise.resolve([]);
+  async getCredentialByPlatformAndType(userId: string, platform: string, types: string[]): Promise<Credential[]> {
+    const result = await this.db.select({
+      userId: tables.platformCredentials.userId,
+      id: tables.platformCredentials.id,
+      isActive: tables.platformCredentials.isActive,
+      createdAt: tables.platformCredentials.createdAt,
+      updatedAt: tables.platformCredentials.updatedAt,
+      schema: tables.credentialSchema,
+      schemaFields: sql<string>`json_group_array(DISTINCT json_object('fieldName', ${tables.credentialSchemaFields.fieldName}, 'fieldType', ${tables.credentialSchemaFields.fieldType}, 'isRequired', ${tables.credentialSchemaFields.isRequired}, 'description', ${tables.credentialSchemaFields.description}, 'createdAt', ${tables.credentialSchemaFields.createdAt}, 'updatedAt', ${tables.credentialSchemaFields.updatedAt}))`,
+      credentialValues: tables.platformCredentials.credentialValues,
+    })
+      .from(tables.platformCredentials)
+      .innerJoin(tables.credentialSchema,
+        and(
+          eq(tables.platformCredentials.schemaId, tables.credentialSchema.id),
+          eq(tables.platformCredentials.schemaVersion, tables.credentialSchema.schemaVersion)
+        )
+      )
+      .leftJoin(tables.credentialSchemaFields, and(
+        eq(tables.credentialSchema.id, tables.credentialSchemaFields.schemaId),
+        eq(tables.credentialSchema.schemaVersion, tables.credentialSchemaFields.schemaVersion)
+      ))
+      .where(and(
+        eq(tables.platformCredentials.userId, userId),
+        inArray(tables.credentialSchema.credentialType, types),
+        eq(tables.credentialSchema.platform, platform)
+      ))
+      .groupBy(tables.platformCredentials.id);
+
+    return result.map((row:any) => ({
+      userId: row.userId,
+      id: row.id,
+      schema: {
+        ...row.schema,
+        schemaFields: JSON.parse(row.schemaFields).reduce((acc: Array<SchemaField>, field: SchemaField) => {
+          acc.push(field)
+          return acc;
+        }, [])
+      },
+      isActive: Boolean(row.isActive),
+      createdAt: row.createdAt,
+      updatedAt: row.updatedAt,
+      credentialValues: row.credentialValues
+    }));
   }
 }

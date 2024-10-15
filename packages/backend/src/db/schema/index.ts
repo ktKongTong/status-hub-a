@@ -10,7 +10,7 @@ export * from './credential-schema'
 
 
 const insertUserSchema = createInsertSchema(users);
-const selectUserSchema = createSelectSchema(users);
+// const selectUserSchema = createSelectSchema(users);
 type AccountInsert = typeof accounts.$inferInsert
 type UserInsert = z.infer<typeof insertUserSchema>
 export type AccountSelect = typeof accounts.$inferSelect
@@ -26,7 +26,7 @@ export type UserAccountSelect = {
   account: AccountSelect,
 }
 
-const insertUserTokenSchema = createInsertSchema(verificationTokens);
+// const insertUserTokenSchema = createInsertSchema(verificationTokens);
 const createUserTokenResultSchema = createSelectSchema(verificationTokens)
 const selectUserTokenSchema = createUserTokenResultSchema.omit({token: true});
 
