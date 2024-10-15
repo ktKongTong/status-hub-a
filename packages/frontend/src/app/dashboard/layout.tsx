@@ -54,7 +54,7 @@ function SideNav() {
           <li><RouteItem name={"Schema"} path={"/dashboard/schemas"}/></li>
           <li><RouteItem name={"Token"} path={"/dashboard/token"}/></li>
         </ul>
-        <div className={'mt-auto mb-0'}>
+        <div className={'mt-auto mb-4'}>
           <NavUserButton/>
         </div>
       </aside>

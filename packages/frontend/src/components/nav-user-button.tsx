@@ -13,6 +13,7 @@ import {Avatar, AvatarImage} from "@/components/ui/avatar";
 import React from "react";
 import {Label} from "@/components/ui/label";
 import { Ellipsis } from "lucide-react";
+import ThemeButton from "@/components/theme-button";
 
 export default function NavUserButton() {
   const {
@@ -47,14 +48,13 @@ export default function NavUserButton() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end" forceMount>
-              <DropdownMenuLabel className="font-normal">
-                <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">
-                    {name}
-                  </p>
-                </div>
-              </DropdownMenuLabel>
-              <DropdownMenuItem>
+              <DropdownMenuItem asChild className={'p-0'}>
+                <Button className={'w-full'} variant={'ghost'}>Profile</Button>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className={'p-0'}>
+                <ThemeButton/>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className={'p-0'}>
                 <Button variant="ghost" className="w-full p-0" onClick={logoutMutation}>
                   Sign Out
                 </Button>

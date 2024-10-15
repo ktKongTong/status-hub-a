@@ -8,9 +8,9 @@ export function RouteItem(
   {name, path}: {name: string, path: string},
 ) {
   const isActive = useMatchPath(path);
-  const activeClass = isActive ? 'bg-zinc-100/90 text-zinc-900' : '';
+  const activeClass = isActive ? 'bg-accent/90' : '';
   return (
-    <Button variant={'ghost'} className={cn('w-full text-sm font-bold transition-colors duration-200 ', activeClass)} >
+    <Button variant={'ghost'} className={cn('w-full text-sm font-bold  ', activeClass)} >
       <Link className={'flex items-start w-full'} href={path} ><span>{name}</span></Link>
     </Button>
   )

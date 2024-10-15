@@ -34,7 +34,7 @@ const CredentialSchemaManagement: React.FC = () => {
           }
         </TableBody>
         {
-          isLoading && <TableSkeleton row={3} column={4}/>
+          isLoading && <TableSkeleton row={3} column={5}/>
         }
       </Table>
     </div>

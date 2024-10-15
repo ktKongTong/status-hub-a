@@ -6,8 +6,9 @@ import React, {useMemo} from "react";
 interface TableSkeletonProps {
   row: number;
   column: number;
+  height?: number
 }
-const TableSkeleton = ({row, column}:TableSkeletonProps) => {
+const TableSkeleton = ({row, column, height = 48}:TableSkeletonProps) => {
   const rows = useMemo(() => new Array(row).fill(0), [row])
   const columns = useMemo(() => new Array(column).fill(0), [column])
   return (
@@ -19,7 +20,7 @@ const TableSkeleton = ({row, column}:TableSkeletonProps) => {
               columns.map((_,idx) => (
                 <TableCell key={idx}>
                   <div className={'flex items-center space-x-4'}>
-                    <Skeleton className="w-full h-12 my-1 rounded-lg"/>
+                    <Skeleton className="w-full my-1 rounded-lg" style={{ height: 48 }}/>
                   </div>
                 </TableCell>
               ))

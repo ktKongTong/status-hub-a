@@ -78,11 +78,10 @@ export const useCredentialSchemas = () => {
   const { data, isLoading, error,isFetching } = useQuery<CredentialSchemaSelect[]>({
     queryKey: ['credentialSchemas'],
     queryFn: ()=> ofetch.get(API_BASE_URL),
-    initialData: [],
   })
 
   useEffect(()=>{
-    if(data.length > 0) {
+    if(data && data.length > 0) {
       setSchemas(data)
     }
   }, [data, setSchemas])
@@ -100,7 +99,7 @@ export const useCredentialSchemas = () => {
     addSchema,
     deleteSchema,
     deleteSchemaAsync,
-    isLoading:isFetching,
+    isLoading:isLoading,
     error,
   }
 }
