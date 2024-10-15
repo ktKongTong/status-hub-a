@@ -42,8 +42,8 @@ const SchemaTableRow = ({schema}:{schema: CredentialSchemaSelect}) => {
           !isSystemSchema &&
             <DeleteConfirmFormDialog
               title={'删除 Schema'}
-              onConfirm={() => deleteMutation.mutate(schema.id)}
-              verifyInput={schema.id}
+              onConfirm={() => deleteMutation.mutateAsync(schema.id)}
+              name={`schema ${schema.id}`}
             />
         }
       </TableCell>

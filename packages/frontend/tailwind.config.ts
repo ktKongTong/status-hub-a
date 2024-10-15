@@ -36,6 +36,12 @@ const config: Config = {
   				DEFAULT: 'hsl(var(--accent))',
   				foreground: 'hsl(var(--accent-foreground))'
   			},
+
+				warning: {
+					DEFAULT: 'hsl(var(--warning))',
+					"warning-foreground": "hsl(var(--warning-foreground))",
+				},
+
   			destructive: {
   				DEFAULT: 'hsl(var(--destructive))',
   				foreground: 'hsl(var(--destructive-foreground))'
@@ -55,9 +61,22 @@ const config: Config = {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
-  		}
+  		},
+			keyframes: {
+				plop: {
+					'0%, 100%': { opacity: '0.2' },
+					'20%': { opacity: '1' },
+				},
+			},
+			animation: {
+				//
+				'plop': 'plop 1s ease-in-out .1s infinite;',
+				'plop2': 'plop 1s ease-in-out .2s infinite',
+				'plop3': 'plop 1s ease-in-out .4s infinite',
+			}
   	}
   },
+	// eslint-disable-next-line @typescript-eslint/no-require-imports
   plugins: [require("tailwindcss-animate")],
 };
 export default config;
