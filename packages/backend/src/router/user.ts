@@ -39,11 +39,10 @@ userRouter.openapi(
     const { dao } = getDB(c)
     const userId = user!.id
     const tokens = await dao.userDAO.getUserTokensByUserId(userId)
-    const res = tokens.map(it=> ({
-      ...it,
-      shortToken: it.token.slice(0,8)
-    }))
-    // TokenSelectVOSchema.safeParse()
+    const res = tokens.map(it=> (TokenSelectVOSchema.parse({
+        ...it,
+        shortToken: it.token.slice(0,8)
+    })))
     return c.json(res)
   });
 
