@@ -4,7 +4,7 @@ export const credential: PlatformCredential = {
   // 只在 fields 更改时变化
   platform: "github",
   version: 1,
-  credentialType: 'apiToken',
+  credentialType: 'api-token',
   description: "GitHub 的 PAT",
   autoRefreshable: false,
   maximumRefreshIntervalInSec: 0,

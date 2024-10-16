@@ -5,7 +5,7 @@ import {getCredentialByPlatformAndType} from "@/router/routes/util";
 import {CredentialType} from "status-hub-shared/models";
 
 const handler = async (c:Context) => {
-  const credentials = await getCredentialByPlatformAndType(c, 'github', ['apiToken'])
+  const credentials = await getCredentialByPlatformAndType(c, 'github', ['api-token'])
   const credential = credentials[0].credentialValues
   const api =  createGitHubAPI(credential.token as string ?? credential.accessToken!)
   const recentGitHubEvents = await api.getRecentEvent(credential.username as string, 20)
@@ -16,6 +16,6 @@ const handler = async (c:Context) => {
 export const route =  {
   path: '/activity/recent',
   raw: true,
-  supportCredentialType: ['apiToken'] as CredentialType[],
+  supportCredentialType: ['api-token'] as CredentialType[],
   handler: handler
 }

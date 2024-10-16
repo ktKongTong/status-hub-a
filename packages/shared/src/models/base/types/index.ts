@@ -1,4 +1,4 @@
-export type CredentialType = 'cookie' | 'oauth' | 'apiToken' | 'credential' | 'oidc' | 'none'
+export type CredentialType = 'cookie' | 'oauth' | 'api-token' | 'credential' | 'oidc' | 'none'
 
 export const CredentialStatusArr:readonly string[] = ['ok', 'in-active', 'pending', 'unknown', 'out-date']
 

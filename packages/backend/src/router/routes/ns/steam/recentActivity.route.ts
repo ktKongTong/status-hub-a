@@ -6,7 +6,7 @@ import {CredentialType} from "status-hub-shared/models";
 
 const handler = async (c:Context) => {
   const steamid = c.req.param('id')
-  const credentials = await getCredentialByPlatformAndType(c, 'steam', ['apiToken'])
+  const credentials = await getCredentialByPlatformAndType(c, 'steam', ['api-token'])
   // maybe zod parse?
   const credential = credentials[0].credentialValues as unknown as SteamAPIKeyCredential
   const apikey = credential.apiKey
@@ -34,6 +34,6 @@ const handler = async (c:Context) => {
 export const route =  {
   path: '/activity/recent',
   raw: true,
-  supportCredentialType: ['apiToken'] as CredentialType[],
+  supportCredentialType: ['api-token'] as CredentialType[],
   handler: handler
 }

@@ -6,7 +6,7 @@ import {GitHub, Spotify} from "arctic";
 
 import {sessions, users} from "@/db/schema";
 import { getDrizzleDB } from "@/middleware/db";
-import {env} from "@/utils/env";
+import {env, isProd} from "@/utils/env";
 
 
 declare module 'hono' {
@@ -37,7 +37,7 @@ const lucia = new Lucia(adapter, {
     attributes: {
       // secure: true,
       // domain: "localhost",
-      secure: process.env.NODE_ENV === 'production',
+      secure: isProd(),
     }
   }
 })

@@ -31,8 +31,8 @@ const middleware: MiddlewareHandler = async (ctx, next) => {
   await next();
   if(isDebug()) {
     try {
-      const res = await ctx.res.json()
-      logger.debug(`${JSON.stringify(res, null, 2)}`);
+      // const res = await ctx.res.json()
+      // logger.debug(`${JSON.stringify(res, null, 2)}`);
     }catch (e) {
 
     }

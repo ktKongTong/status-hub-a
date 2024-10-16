@@ -1,7 +1,7 @@
 import {$Fetch, createFetch, FetchOptions, ofetch} from "ofetch";
 
-import { logger } from "status-hub-shared/utils"
-import {isDebug} from "@/utils/env";
+import { logger } from "./logger"
+import { isDebug } from "./env";
 
 export const rofetch = createFetch({defaults: {
     retryStatusCodes: [400, 408, 409, 425, 429, 500, 502, 503, 504],
@@ -30,7 +30,7 @@ export class Fetch {
   private ofetchInstance: $Fetch
   constructor(fetchInstance?:$Fetch, options?: FetchOptions) {
     this.options = options;
-    this.ofetchInstance = fetchInstance ?? createFetch();
+    this.ofetchInstance = fetchInstance ?? rofetch;
   }
   private async fetch(request: string, options?: ExtendFetchOptions) {
     if (options?.json && !options.body) {
@@ -57,7 +57,6 @@ export class Fetch {
       ...this.options,
       ...options,
     });
-
     return res
   }
   get<T extends any = any>(request: string, options?: ExtendFetchOptions):Promise<T> {
