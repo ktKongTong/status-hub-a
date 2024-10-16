@@ -9,7 +9,7 @@ variable "REPO" {
 }
 
 group "default" {
-  targets = ["backend","frontend", "status-hub"]
+  targets = ["backend","frontend", "statushub"]
 }
 
 target "docker-metadata-action" {}
