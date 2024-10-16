@@ -8,14 +8,8 @@ import {randomString} from "@/utils";
 import {BullMQAdapter} from "@bull-board/api/bullMQAdapter.js";
 import {createBullBoard} from "@bull-board/api";
 import {env} from "@/utils/env";
-const redisHost =  env("BULLMQ_REDIS_HOST", "localhost" as string);
-const redisPort = env("BULLMQ_REDIS_PORT", 6379, parseInt);
-const redisPassword = env("BULLMQ_REDIS_PASSWORD");
-const connection = {
-  host: redisHost,
-  port: redisPort,
-  password: redisPassword as string | undefined,
-}
+import Redis from "ioredis";
+
 
 const serverAdapter = new HonoAdapter(serveStatic);
 const basePath = '/admin/queues'
@@ -58,6 +52,12 @@ export class BullMQQueue implements JobQueue {
   queues: Record<string, Queue> = {};
   workers: Record<string, Worker> = {};
   constructor() {
+    const redisURL =  env("BULLMQ_REDIS_URL", "redis://localhost:6379");
+    const connection = new Redis(redisURL, {
+      maxRetriesPerRequest: null,
+      enableReadyCheck: false,
+      showFriendlyErrorStack: true
+    });
     const systemCredentialRefreshJob = new SystemRefreshTask(connection)
     const schedule5minRefreshJob = new Every5minTokenRefreshCheckerJob(connection, systemCredentialRefreshJob.queue)
     queueBoard.addQueue(new BullMQAdapter(systemCredentialRefreshJob.queue))

@@ -43,7 +43,7 @@ import R from '@/utils/openapi'
 app
   .openapi(
     R
-      .get('/ping')
+      .get('/api/ping')
       .respBodySchema(z.object({data: z.string()}))
       .buildOpenAPI('health check'),
     (c) => c.json({data: 'pong'})
