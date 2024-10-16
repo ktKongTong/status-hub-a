@@ -9,7 +9,7 @@ export class Every5minTokenRefreshCheckerJob extends JobHandler<any> {
   subQueue: Queue
   constructor(conn: Connection, queue: Queue) {
     super('token-refresh-task', conn);
-    this.queue.upsertJobScheduler('repeat-every-5min', { count:1, every: 30000 * 1}, { name: 'schedule-job', data: {}, opts: {} })
+    this.queue.upsertJobScheduler('repeat-every-5min', { count:1, every: 60000 * 5}, { name: 'schedule-job', data: {}, opts: {} })
     this.subQueue = queue
   }
   async handler(job: Job<any, any, string>): Promise<any> {
