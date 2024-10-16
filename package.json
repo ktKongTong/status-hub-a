@@ -5,6 +5,8 @@
   "scripts": {
     "build": "turbo run build",
     "test": "turbo run test",
+    "test:watch": "turbo run test:watch",
+    "dev": "turbo run dev",
     "start": "turbo run start"
   },
   "private": true,

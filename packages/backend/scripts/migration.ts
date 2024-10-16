@@ -12,6 +12,7 @@ async function main() {
   const sqlite =new  Database('./data/sqlite.db');
   const db = drizzle(sqlite);
   migrate(db, {migrationsFolder: './drizzle'});
+  console.log("migrate finished")
 }
 
 main()

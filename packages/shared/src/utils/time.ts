@@ -35,7 +35,7 @@ export const timestamp = (start?: number | string | Date | undefined) => {
   throw new Error('Invalid input type');
 };
 
-import relativeTime from 'dayjs/plugin/relativeTime'
+import relativeTime from 'dayjs/plugin/relativeTime.js'
 import dayjs from "dayjs";
 dayjs.extend(relativeTime);
 

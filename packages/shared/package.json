@@ -5,12 +5,12 @@
   "scripts": {
     "build": "tsc && tsc-alias",
     "test": "vitest run",
+    "test:watch": "vitest --watch",
     "check-types": "tsc --noEmit"
   },
   "type": "module",
   "files": [
     "package.json",
-    "src",
     "dist"
   ],
   "exports": {

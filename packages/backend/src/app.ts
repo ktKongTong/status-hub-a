@@ -38,6 +38,7 @@ app
   .route('/', loginRouter)
   .route('/', logoutRouter)
 
+import R from '@/utils/openapi'
 // healthy check
 app
   .openapi(
@@ -48,7 +49,6 @@ app
     (c) => c.json({data: 'pong'})
   )
 
-import R from '@/utils/openapi'
 import { BizError } from "@/errors";
 // biz
 app

@@ -3,8 +3,8 @@
   "scripts": {
     "dev": "source .env.local && tsx watch src/index.ts",
     "build": "tsx scripts/build.ts",
-    "build-tsc": "tsc -p tsconfig.json && tsc-alias",
     "test": "vitest run",
+    "test:watch": "vitest --watch",
     "check-types": "tsc --noEmit",
     "db:init": "rm -rf data && mkdir data && drizzle-kit generate && drizzle-kit migrate",
     "rebuild": "rm -rf dist && npm run build",
