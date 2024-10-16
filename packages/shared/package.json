@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "tsc && tsc-alias"
+    "build": "tsc && tsc-alias",
+    "test": "vitest run",
+    "check-types": "tsc --noEmit"
   },
   "type": "module",
   "files": [
@@ -41,8 +43,12 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@hono/node-server": "^1.13.1",
+    "@types/supertest": "^6.0.2",
     "eslint": "^8",
     "eslint-config-next": "14.2.13",
+    "hono": "^4.6.3",
+    "supertest": "^7.0.0",
     "tsc-alias": "^1.8.10"
   }
 }

@@ -1,11 +1,7 @@
 
 // rewrite only support at build phase
 // see: https://github.com/vercel/next.js/discussions/33932
-import path from "node:path";
-import {fileURLToPath, } from "node:url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// eslint-disable-next-line import/no-anonymous-default-export
 export default (phase, { defaultConfig }) => {
     return {
         ...defaultConfig,

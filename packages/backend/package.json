@@ -3,6 +3,9 @@
   "scripts": {
     "dev": "source .env.local && tsx watch src/index.ts",
     "build": "tsx scripts/build.ts",
+    "build-tsc": "tsc -p tsconfig.json && tsc-alias",
+    "test": "vitest run",
+    "check-types": "tsc --noEmit",
     "db:init": "rm -rf data && mkdir data && drizzle-kit generate && drizzle-kit migrate",
     "rebuild": "rm -rf dist && npm run build",
     "start": "node --experimental-specifier-resolution=node ./dist/scripts/migration.js && node --experimental-specifier-resolution=node ./dist/src/index.js",
@@ -57,6 +60,8 @@
     "drizzle-kit": "^0.24.2",
     "tsc-alias": "^1.8.10",
     "tsx": "^4.19.1",
+    "vite-tsconfig-paths": "^5.0.1",
+    "vitest": "^2.1.3",
     "wrangler": "^3.57.2"
   }
 }

@@ -39,3 +39,4 @@ sqlite.db
 .env.docker
 .idea
 .vercel
+.turbo
