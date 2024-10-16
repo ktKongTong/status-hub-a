@@ -6,6 +6,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      NODE_ENV: ci
     steps:
       - name: Check out code
         uses: actions/checkout@v4
