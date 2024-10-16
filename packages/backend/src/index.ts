@@ -20,7 +20,7 @@ serve({
 
 serve({
   fetch: app.fetch,
-  port: env("PORT", 8420, parseInt),
+  port: env("STATUS_HUB_PORT", 8420, parseInt),
 },(addrInfo)=>{
   onBullBoardStartup(addrInfo)
   logger.info(`StatusHub Running on http://${addrInfo.address}:${addrInfo.port}/`);
