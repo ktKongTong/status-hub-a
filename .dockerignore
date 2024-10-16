@@ -132,5 +132,3 @@ dist
 
 **/.next
 **/build
-**/dist
-**/node_modules

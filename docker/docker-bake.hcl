@@ -27,7 +27,7 @@ target "statushub" {
 target "backend" {
   inherits = ["docker-metadata-action"]
   context = "."
-  dockerfile = "package/backend/Dockerfile"
+  dockerfile = "packages/backend/Dockerfile"
   platforms = [
     "linux/amd64",
     "linux/arm64"
@@ -37,7 +37,7 @@ target "backend" {
 target "frontend" {
   inherits = ["docker-metadata-action"]
   context = "."
-  dockerfile = "package/frontend/Dockerfile"
+  dockerfile = "packages/frontend/Dockerfile"
   platforms = [
     "linux/amd64",
     "linux/arm64"

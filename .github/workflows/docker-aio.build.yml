@@ -96,7 +96,7 @@ jobs:
           files: |
             ./docker/docker-bake.hcl
             /tmp/bake-meta.json
-          targets: status-hub
+          targets: statushub
           set: |
             *.tags=
             *.platform=${{ matrix.platform }}
