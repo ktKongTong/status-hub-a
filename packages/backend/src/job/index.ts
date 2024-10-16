@@ -9,10 +9,12 @@ import {BullMQAdapter} from "@bull-board/api/bullMQAdapter.js";
 import {createBullBoard} from "@bull-board/api";
 import {env} from "@/utils/env";
 const redisHost =  env("BULLMQ_REDIS_HOST", "localhost" as string);
-const port = env("BULLMQ_REDIS_PORT", 6379, parseInt);
+const redisPort = env("BULLMQ_REDIS_PORT", 6379, parseInt);
+const redisPassword = env("BULLMQ_REDIS_PASSWORD");
 const connection = {
   host: redisHost,
-  port: port,
+  port: redisPort,
+  password: redisPassword as string | undefined,
 }
 
 const serverAdapter = new HonoAdapter(serveStatic);

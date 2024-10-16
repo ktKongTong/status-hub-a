@@ -18,5 +18,5 @@ export const env = <T>(key:string, defaultValue?: T, converter?:(i:string) => T)
   if(res) {
     return converter?.(res) ?? res as T
   }
-  return defaultValue as T
+  return defaultValue ?? undefined as T
 }
