@@ -38,13 +38,10 @@ RUN pnpm deploy --filter=status-hub-backend --prod /prod/status-hub-backend
 
 FROM base AS runner
 
-# Don't run production as root
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 honojs
 USER honojs
 
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=installer --chown=honojs:nodejs /prod/status-hub-backend /prod/status-hub-backend
 RUN mkdir -p /prod/status-hub-backend/data
 RUN chmod -R 777 /prod/status-hub-backend

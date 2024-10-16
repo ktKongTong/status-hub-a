@@ -1,42 +1,29 @@
-variable "USERNAME" {
-  default = "ktkongtong"
-}
-variable "REPO" {
-  default = "status-hub"
-}
+
 
 group "default" {
-  targets = ["backend","frontend"]
+  targets = ["backend","frontend", "statushub"]
 }
 
-target "builder" {
-  dockerfile = "docker/base.Dockerfile"
+target "statushub" {
+  context = "."
+  dockerfile = "docker/aio.Dockerfile"
+  tags=[
+    "status-hub:latest"
+  ]
 }
 
 target "backend" {
   context = "."
-  dockerfile = "package/backend/Dockerfile"
-  contexts = {
-    builder = "target:builder"
-  }
+  dockerfile = "packages/backend/Dockerfile"
   tags = [
     "status-hub-backend:latest"
-  ]
-  platforms = [
-    "linux/arm64"
   ]
 }
 
 target "frontend" {
   context = "."
-  dockerfile = "package/frontend/Dockerfile"
-  contexts = {
-    builder = "target:builder"
-  }
+  dockerfile = "packages/frontend/Dockerfile"
   tags = [
     "status-hub-frontend:latest"
-  ]
-  platforms = [
-    "linux/arm64"
   ]
 }
