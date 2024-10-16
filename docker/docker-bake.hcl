@@ -9,22 +9,25 @@ variable "REPO" {
 }
 
 group "default" {
-  targets = ["backend","frontend"]
+  targets = ["backend","frontend", "status-hub"]
 }
 
 target "docker-metadata-action" {}
 
-target "builder" {
-  dockerfile = "docker/base.Dockerfile"
+target "statushub" {
+  inherits = ["docker-metadata-action"]
+  context = "."
+  dockerfile = "docker/aio.Dockerfile"
+  platforms = [
+    "linux/amd64",
+    "linux/arm64"
+  ]
 }
 
 target "backend" {
   inherits = ["docker-metadata-action"]
   context = "."
-  dockerfile = "docker/backend.Dockerfile"
-  contexts = {
-    builder = "target:builder"
-  }
+  dockerfile = "package/backend/Dockerfile"
   platforms = [
     "linux/amd64",
     "linux/arm64"
@@ -34,10 +37,7 @@ target "backend" {
 target "frontend" {
   inherits = ["docker-metadata-action"]
   context = "."
-  dockerfile = "docker/frontend.Dockerfile"
-  contexts = {
-    builder = "target:builder"
-  }
+  dockerfile = "package/frontend/Dockerfile"
   platforms = [
     "linux/amd64",
     "linux/arm64"

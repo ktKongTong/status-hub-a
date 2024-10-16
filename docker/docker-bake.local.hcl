@@ -15,7 +15,7 @@ target "builder" {
 
 target "backend" {
   context = "."
-  dockerfile = "docker/backend.Dockerfile"
+  dockerfile = "package/backend/Dockerfile"
   contexts = {
     builder = "target:builder"
   }
@@ -29,7 +29,7 @@ target "backend" {
 
 target "frontend" {
   context = "."
-  dockerfile = "docker/frontend.Dockerfile"
+  dockerfile = "package/frontend/Dockerfile"
   contexts = {
     builder = "target:builder"
   }
