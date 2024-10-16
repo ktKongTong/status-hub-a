@@ -47,7 +47,7 @@
     "@types/supertest": "^6.0.2",
     "eslint": "^8",
     "eslint-config-next": "14.2.13",
-    "hono": "^4.6.3",
+    "hono": "^4.6.5",
     "supertest": "^7.0.0",
     "tsc-alias": "^1.8.10"
   }
