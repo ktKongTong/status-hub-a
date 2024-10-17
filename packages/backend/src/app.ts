@@ -30,6 +30,7 @@ app
     {path: '/api/auth/sign-in', method: 'POST'},
     {path: '/api/auth/sign-up', method: 'POST'},
     {path: '/api/reference', method: 'GET'},
+    {path: '/api/ping', method: 'GET'},
     {path: '/api/openapi.json', method: 'GET'},
   ]))
 
