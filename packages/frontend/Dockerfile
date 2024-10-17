@@ -19,9 +19,7 @@ RUN turbo prune status-hub-frontend --docker
 # Add lockfile and package.json's of isolated subworkspace
 FROM pnpm-base AS installer
 ARG TURBO_TEAM
-ARG TURBO_TOKEN
 ENV TURBO_TEAM=$TURBO_TEAM
-ENV TURBO_TOKEN=$TURBO_TOKEN
 
 WORKDIR /app
 
@@ -40,8 +38,8 @@ COPY --from=builder /builder/out/full/ .
 
 # ARG TURBO_TOKEN
 # ENV TURBO_TOKEN=$TURBO_TOKEN
-
-RUN pnpm turbo build --filter=status-hub-frontend
+ENV TURBO_TEAM=$TURBO_TEAM
+RUN --mount=type=secret,id=TURBO_TOKEN,env=TURBO_TOKEN pnpm turbo build --filter=status-hub-frontend
 
 FROM base AS runner
 WORKDIR /app

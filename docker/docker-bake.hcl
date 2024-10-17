@@ -1,4 +1,3 @@
-variable "TURBO_TOKEN" {}
 variable "TURBO_TEAM" {}
 variable "REGISTRY" {
   default = "ghcr.io"
@@ -20,12 +19,14 @@ target "statushub" {
   inherits = ["docker-metadata-action"]
   context = "."
   dockerfile = "docker/aio.Dockerfile"
+  secret = [
+    "type=env,id=TURBO_TOKEN"
+  ]
   platforms = [
     "linux/amd64",
     "linux/arm64"
   ]
   args = {
-    TURBO_TOKEN = "${TURBO_TOKEN}"
     TURBO_TEAM = "${TURBO_TEAM}"
   }
 }
