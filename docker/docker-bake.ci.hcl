@@ -15,7 +15,7 @@ target "ci" {
   }
 }
 
-target "statushub-local" {
+target "status-hub-local" {
   inherits = ["ci"]
   context = "."
   dockerfile = "docker/aio.Dockerfile"
