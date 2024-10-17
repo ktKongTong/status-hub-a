@@ -20,7 +20,7 @@ while [[ $? -ne 0 ]] && [[ $RETRY -lt $MAX_RETRIES ]]; do
     curl --fail http://localhost:8418/api/ping
 done
 
-docker compose -f docker-compose.ci.yml down
+docker compose -f docker/docker-compose.ci.yml down
 
 
 if [[ $RETRY -ge $MAX_RETRIES ]]
