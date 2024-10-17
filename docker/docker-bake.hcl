@@ -12,6 +12,23 @@ variable "REPO" {
 
 target "docker-metadata-action" {}
 
+target "ci" {
+  secret = [
+    "type=env,id=TURBO_TOKEN"
+  ]
+  args = {
+    TURBO_TEAM = "${TURBO_TEAM}"
+  }
+}
+
+target "release" {
+  inherits = ["ci"]
+  platforms = [
+    "linux/amd64",
+    "linux/arm64"
+  ]
+}
+
 target "statushub-local" {
   inherits = ["docker-metadata-action"]
   context = "."
@@ -39,29 +56,17 @@ target "frontend-local" {
   }
 }
 
-target "ci" {
-  secret = [
-    "type=env,id=TURBO_TOKEN"
-  ]
-  args = {
-    TURBO_TEAM = "${TURBO_TEAM}"
-  }
-  platforms = [
-    "linux/amd64",
-    "linux/arm64"
-  ]
-}
 
 target "statushub" {
-  inherits = ["ci", "statushub-local"]
+  inherits = ["release", "statushub-local"]
 }
 
 target "backend" {
-  inherits = ["ci", "backend-local"]
+  inherits = ["release", "backend-local"]
 }
 
 target "frontend" {
-  inherits = ["ci", "frontend-local"]
+  inherits = ["release", "frontend-local"]
 }
 
 group "default" {
