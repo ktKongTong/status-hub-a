@@ -1,6 +1,6 @@
 variable "TURBO_TEAM" {}
 group "default" {
-  targets = ["statushub-local"]
+  targets = ["status-hub-local"]
 }
 
 target "docker-metadata-action" {}

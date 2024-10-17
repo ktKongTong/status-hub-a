@@ -54,6 +54,8 @@ jobs:
           targets: status-hub-local
           set: |
             *.cache-from=type=gha,scope=build-linux-amd64
-            *.output=type=image,push=false
+            *.output=type=image,name=status-hub-local,push=false
+      - name: Show Docker image
+        run: docker images
       - name: Test Docker image
         run: bash scripts/docker/test-docker.sh
