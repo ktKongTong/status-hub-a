@@ -34,8 +34,7 @@ RUN --mount=type=cache,target=${PNPM_HOME} echo "PNPM contents after install: $(
 COPY --from=builder /builder/out/full/ .
 
 ENV TURBO_TEAM=$TURBO_TEAM
-RUN --mount=type=secret,id=TURBO_TOKEN pnpm turbo build --filter=status-hub-backend
-RUN --mount=type=secret,id=TURBO_TOKEN cat /run/secrets/TURBO_TOKEN
+RUN --mount=type=secret,id=TURBO_TOKEN,env=TURBO_TOKEN pnpm turbo build --filter=status-hub-backend
 RUN --mount=type=cache,target=${PNPM_HOME} pnpm deploy --filter=status-hub-backend --prod /prod/status-hub-backend
 
 FROM base AS runner
