@@ -8,7 +8,10 @@ RUN corepack enable
 FROM pnpm-base AS builder
 COPY . /builder
 WORKDIR /builder
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN  --mount=type=cache,target=${PNPM_HOME} \
+  pnpm config set store-dir ${PNPM_HOME}
+#
+#RUN --mount=type=cache,target=${PNPM_HOME} echo "PNPM contents after install: $(ls -la ${PNPM_HOME})"
 RUN pnpm add -g turbo
 
 RUN turbo prune status-hub-backend --docker
@@ -16,21 +19,23 @@ RUN turbo prune status-hub-backend --docker
 # Add lockfile and package.json's of isolated subworkspace
 FROM pnpm-base AS installer
 ARG TURBO_TEAM
-ARG TURBO_TOKEN
-
+ENV PNPM_HOME="/pnpm"
 WORKDIR /app
 
 # First install the dependencies (as they change less often)
 COPY --from=builder /builder/out/json/ .
 
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
+RUN --mount=type=cache,target=${PNPM_HOME}  \
+    pnpm config set store-dir ${PNPM_HOME}  \
+    pnpm install --frozen-lockfile --prefer-offline
+
+RUN --mount=type=cache,target=${PNPM_HOME} echo "PNPM contents after install: $(ls -la ${PNPM_HOME})"
 # Build the project
 COPY --from=builder /builder/out/full/ .
 
-ENV TURBO_TOKEN=$TURBO_TOKEN
 ENV TURBO_TEAM=$TURBO_TEAM
-RUN pnpm turbo build --filter=status-hub-backend
+RUN --mount=type=secret,id=TURBO_TOKEN pnpm turbo build --filter=status-hub-backend
 RUN pnpm deploy --filter=status-hub-backend --prod /prod/status-hub-backend
 
 FROM base AS runner

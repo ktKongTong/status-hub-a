@@ -8,7 +8,10 @@ RUN corepack enable
 FROM pnpm-base AS builder
 COPY . /builder
 WORKDIR /builder
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN  --mount=type=cache,target=${PNPM_HOME} \
+  pnpm config set store-dir ${PNPM_HOME}
+#
+#RUN --mount=type=cache,target=${PNPM_HOME} echo "PNPM contents after install: $(ls -la ${PNPM_HOME})"
 RUN pnpm add -g turbo
 
 RUN turbo prune status-hub-frontend --docker
@@ -16,9 +19,8 @@ RUN turbo prune status-hub-frontend --docker
 # Add lockfile and package.json's of isolated subworkspace
 FROM pnpm-base AS installer
 ARG TURBO_TEAM
-ENV TURBO_TEAM=$TURBO_TEAM
-
 ARG TURBO_TOKEN
+ENV TURBO_TEAM=$TURBO_TEAM
 ENV TURBO_TOKEN=$TURBO_TOKEN
 
 WORKDIR /app
@@ -26,8 +28,10 @@ WORKDIR /app
 # First install the dependencies (as they change less often)
 COPY --from=builder /builder/out/json/ .
 
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-
+RUN --mount=type=cache,target=${PNPM_HOME}  \
+    pnpm config set store-dir ${PNPM_HOME}  \
+    pnpm install --frozen-lockfile --prefer-offline
+RUN --mount=type=cache,target=${PNPM_HOME} echo "PNPM contents after install: $(ls -la ${PNPM_HOME})"
 # Build the project
 COPY --from=builder /builder/out/full/ .
 
@@ -53,5 +57,7 @@ USER nextjs
 COPY --from=installer --chown=nextjs:nodejs /app/packages/frontend/.next/standalone ./
 COPY --from=installer --chown=nextjs:nodejs /app/packages/frontend/.next/static ./packages/frontend/.next/static
 #COPY --from=installer --chown=nextjs:nodejs /app/packages/frontend/public ./packages/frontend/public
+
 EXPOSE 3000
-CMD node packages/frontend/server.js
+
+CMD ["node","packages/frontend/server.js"]
