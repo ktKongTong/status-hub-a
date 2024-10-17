@@ -14,13 +14,20 @@ COPY . .
 RUN --mount=type=cache,target=${PNPM_HOME} echo "PNPM contents after install: $(ls -la ${PNPM_HOME})"
 
 RUN --mount=type=cache,target=${PNPM_HOME} pnpm config set store-dir ${PNPM_HOME}
-RUN --mount=type=cache,target=${PNPM_HOME} pnpm install --frozen-lockfile --prefer-offline
-
+RUN --mount=type=cache,target=${PNPM_HOME} pnpm add -w turbo
+RUN --mount=type=cache,target=${PNPM_HOME} pnpm install --prod --frozen-lockfile --prefer-offline
 RUN --mount=type=cache,target=${PNPM_HOME} echo "PNPM contents after install: $(ls -la ${PNPM_HOME})"
 
 ENV TURBO_TEAM=$TURBO_TEAM
 
-RUN --mount=type=secret,id=TURBO_TOKEN,env=TURBO_TOKEN pnpm turbo build
+RUN --mount=type=secret,id=TURBO_TOKEN \
+    if [ -f /run/secrets/TURBO_TOKEN ]; then \
+        echo "Building with TURBO_TOKEN" && \
+        TURBO_TOKEN=$(cat /run/secrets/TURBO_TOKEN) pnpm turbo build; \
+    else \
+        echo "Building without TURBO_TOKEN" && \
+        pnpm turbo build; \
+    fi
 
 RUN --mount=type=cache,target=${PNPM_HOME} pnpm deploy --filter=status-hub-backend --prod /prod/status-hub-backend
 

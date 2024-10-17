@@ -26,15 +26,26 @@ WORKDIR /app
 COPY --from=builder /builder/out/json/ .
 
 
+RUN --mount=type=cache,target=${PNPM_HOME} echo "PNPM before after install: $(ls -la ${PNPM_HOME})"
+
 RUN --mount=type=cache,target=${PNPM_HOME} pnpm config set store-dir ${PNPM_HOME}
-RUN --mount=type=cache,target=${PNPM_HOME} pnpm install --frozen-lockfile --prefer-offline
+RUN --mount=type=cache,target=${PNPM_HOME} pnpm add -w turbo
+RUN --mount=type=cache,target=${PNPM_HOME} pnpm install --prod --frozen-lockfile --prefer-offline
 
 RUN --mount=type=cache,target=${PNPM_HOME} echo "PNPM contents after install: $(ls -la ${PNPM_HOME})"
 # Build the project
 COPY --from=builder /builder/out/full/ .
 
 ENV TURBO_TEAM=$TURBO_TEAM
-RUN --mount=type=secret,id=TURBO_TOKEN,env=TURBO_TOKEN pnpm turbo build --filter=status-hub-backend
+RUN --mount=type=secret,id=TURBO_TOKEN \
+    if [ -f /run/secrets/TURBO_TOKEN ]; then \
+        echo "Building with TURBO_TOKEN" && \
+        TURBO_TOKEN=$(cat /run/secrets/TURBO_TOKEN) pnpm turbo build; \
+    else \
+        echo "Building without TURBO_TOKEN" && \
+        pnpm turbo build --filter=status-hub-backend; \
+    fi
+
 RUN --mount=type=cache,target=${PNPM_HOME} pnpm deploy --filter=status-hub-backend --prod /prod/status-hub-backend
 
 FROM base AS runner

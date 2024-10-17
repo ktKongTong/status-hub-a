@@ -26,8 +26,12 @@ WORKDIR /app
 # First install the dependencies (as they change less often)
 COPY --from=builder /builder/out/json/ .
 
+RUN --mount=type=cache,target=${PNPM_HOME} echo "PNPM before after install: $(ls -la ${PNPM_HOME})"
+
 RUN --mount=type=cache,target=${PNPM_HOME} pnpm config set store-dir ${PNPM_HOME}
-RUN --mount=type=cache,target=${PNPM_HOME} pnpm install --frozen-lockfile --prefer-offline
+RUN --mount=type=cache,target=${PNPM_HOME} pnpm add -w turbo
+RUN --mount=type=cache,target=${PNPM_HOME} pnpm install --prod --frozen-lockfile --prefer-offline
+
 RUN --mount=type=cache,target=${PNPM_HOME} echo "PNPM contents after install: $(ls -la ${PNPM_HOME})"
 # Build the project
 COPY --from=builder /builder/out/full/ .
@@ -39,7 +43,14 @@ COPY --from=builder /builder/out/full/ .
 # ARG TURBO_TOKEN
 # ENV TURBO_TOKEN=$TURBO_TOKEN
 ENV TURBO_TEAM=$TURBO_TEAM
-RUN --mount=type=secret,id=TURBO_TOKEN,env=TURBO_TOKEN pnpm turbo build --filter=status-hub-frontend
+RUN --mount=type=secret,id=TURBO_TOKEN \
+    if [ -f /run/secrets/TURBO_TOKEN ]; then \
+        echo "Building with TURBO_TOKEN" && \
+        TURBO_TOKEN=$(cat /run/secrets/TURBO_TOKEN) pnpm turbo build; \
+    else \
+        echo "Building without TURBO_TOKEN" && \
+        pnpm turbo build --filter=status-hub-frontend; \
+    fi
 
 FROM base AS runner
 WORKDIR /app
