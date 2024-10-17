@@ -11,6 +11,8 @@ env:
   UESRNAME: ktkongtong
   DOCKERHUB_SLUG: ktkongtong/status-hub
   GHCR_SLUG: ghcr.io/ktkongtong/status-hub
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
 jobs:
   prepare:
     runs-on: ubuntu-latest
@@ -34,6 +36,7 @@ jobs:
             ${{ env.DOCKERHUB_SLUG }}
             ${{ env.GHCR_SLUG }}
           tags: |
+            type=sha,prefix={{branch}}-
             type=match,pattern=v(.*),group=1
           labels: |
             org.opencontainers.image.title=status-hub
@@ -121,6 +124,7 @@ jobs:
 
   merge:
     runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
     needs:
       - build
     steps:

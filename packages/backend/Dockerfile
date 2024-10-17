@@ -15,6 +15,8 @@ RUN turbo prune status-hub-backend --docker
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM pnpm-base AS installer
+ARG TURBO_TEAM
+ARG TURBO_TOKEN
 
 WORKDIR /app
 
@@ -26,13 +28,8 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 # Build the project
 COPY --from=builder /builder/out/full/ .
 
-# Uncomment and use build args to enable remote caching
-# ARG TURBO_TEAM
-# ENV TURBO_TEAM=$TURBO_TEAM
-
-# ARG TURBO_TOKEN
-# ENV TURBO_TOKEN=$TURBO_TOKEN
-
+ENV TURBO_TOKEN=$TURBO_TOKEN
+ENV TURBO_TEAM=$TURBO_TEAM
 RUN pnpm turbo build --filter=status-hub-backend
 RUN pnpm deploy --filter=status-hub-backend --prod /prod/status-hub-backend
 

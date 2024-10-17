@@ -1,3 +1,5 @@
+variable "TURBO_TOKEN" {}
+variable "TURBO_TEAM" {}
 variable "REGISTRY" {
   default = "ghcr.io"
 }
@@ -22,6 +24,11 @@ target "statushub" {
     "linux/amd64",
     "linux/arm64"
   ]
+
+  args = {
+    TURBO_TOKEN = "${TURBO_TOKEN}"
+    TURBO_TEAM = "${TURBO_TEAM}"
+  }
 }
 
 target "backend" {
@@ -32,6 +39,11 @@ target "backend" {
     "linux/amd64",
     "linux/arm64"
   ]
+
+  args = {
+    TURBO_TOKEN = "${TURBO_TOKEN}"
+    TURBO_TEAM = "${TURBO_TEAM}"
+  }
 }
 
 target "frontend" {
@@ -42,4 +54,8 @@ target "frontend" {
     "linux/amd64",
     "linux/arm64"
   ]
+  args = {
+    TURBO_TOKEN = "${TURBO_TOKEN}"
+    TURBO_TEAM = "${TURBO_TEAM}"
+  }
 }
