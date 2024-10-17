@@ -13,9 +13,8 @@ WORKDIR /app
 
 COPY . .
 
-RUN --mount=type=cache,target=${PNPM_HOME}  \
-    pnpm config set store-dir ${PNPM_HOME}  \
-    pnpm install --frozen-lockfile --prefer-offline
+RUN --mount=type=cache,target=${PNPM_HOME} pnpm config set store-dir ${PNPM_HOME}
+RUN --mount=type=cache,target=${PNPM_HOME} pnpm install --frozen-lockfile --prefer-offline
 
 RUN --mount=type=cache,target=${PNPM_HOME} echo "PNPM contents after install: $(ls -la ${PNPM_HOME})"
 
