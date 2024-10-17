@@ -47,15 +47,17 @@ COPY --from=installer --chown=status-hub:nodejs /app/packages/frontend/.next/sta
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=installer --chown=status-hub:nodejs /prod/status-hub-backend /prod/status-hub-backend
+COPY --from=installer --chown=status-hub:nodejs /app/scripts/startup.sh /prod/status-hub-backend/startup.sh
 RUN mkdir -p /prod/status-hub-backend/data
+RUN mkdir -p /prod/status-hub-backend/data/log
 RUN chmod -R 777 /prod/status-hub-backend
 RUN chmod -R 777 /prod/status-hub-frontend
+RUN chmod +x /prod/status-hub-backend/startup.sh
 VOLUME ["/prod/status-hub-backend/data"]
 
 WORKDIR /prod/status-hub-backend
 EXPOSE 8420
 EXPOSE 8419
 EXPOSE 3000
-CMD node /prod/status-hub-frontend/packages/frontend/server.js & \
-    node --experimental-specifier-resolution=node /prod/status-hub-backend/dist/scripts/migration.js  && \
-    node --experimental-specifier-resolution=node /prod/status-hub-backend/dist/src/index.js
+
+CMD ["/bin/sh", "-c", "/prod/status-hub-backend/startup.sh"]
