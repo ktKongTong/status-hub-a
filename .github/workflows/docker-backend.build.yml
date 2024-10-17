@@ -11,6 +11,8 @@ env:
   UESRNAME: ktkongtong
   DOCKERHUB_SLUG: ktkongtong/status-hub-backend
   GHCR_SLUG: ghcr.io/ktkongtong/status-hub-backend
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
 jobs:
   prepare:
     runs-on: ubuntu-latest
@@ -34,6 +36,7 @@ jobs:
             ${{ env.DOCKERHUB_SLUG }}
             ${{ env.GHCR_SLUG }}
           tags: |
+            type=sha,prefix=sha-
             type=match,pattern=v(.*),group=1
           labels: |
             org.opencontainers.image.title=status-hub-backend
@@ -102,7 +105,7 @@ jobs:
             *.platform=${{ matrix.platform }}
             *.cache-from=type=gha,scope=build-${{ env.PLATFORM_PAIR }}
             *.cache-to=type=gha,scope=build-${{ env.PLATFORM_PAIR }}
-            *.output=type=image,"name=${{ env.DOCKERHUB_SLUG }},${{ env.GHCR_SLUG }}",name-canonical=true,push-by-digest=true,push=${{ github.event_name != 'pull_request' }}
+            *.output=type=image,"name=${{ env.DOCKERHUB_SLUG }},${{ env.GHCR_SLUG }}",name-canonical=true,push-by-digest=true,push=${{ github.event_name != 'pull_request'  && startsWith(github.ref, 'refs/tags/v') }}
       - name: Export digest
         run: |
           mkdir -p /tmp/digests
