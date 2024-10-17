@@ -50,6 +50,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
+          file: docker/aio.Dockerfile
           build-args: TURBO_TEAM=${{ secrets.TURBO_TEAM }}  # also test bundling Chromium
           load: true
           tags: status-hub-local:latest
