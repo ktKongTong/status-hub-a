@@ -1,3 +1,4 @@
+variable "TURBO_TEAM" {}
 group "default" {
   targets = ["statushub-local"]
 }
