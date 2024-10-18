@@ -1,8 +1,12 @@
 group "default" {
-  targets = ["statushub-local"]
+  targets = ["status-hub-local"]
 }
 
-target "statushub-local" {
+group "all" {
+  targets = ["status-hub-local", "backend-local", "frontend-local"]
+}
+
+target "status-hub-local" {
   context = "."
   dockerfile = "docker/aio.Dockerfile"
   tags=[

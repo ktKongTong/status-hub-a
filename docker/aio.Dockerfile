@@ -19,7 +19,7 @@ RUN --mount=type=cache,target=${PNPM_HOME} pnpm install --frozen-lockfile --pref
 RUN --mount=type=cache,target=${PNPM_HOME} echo "PNPM contents after install: $(ls -la ${PNPM_HOME})"
 
 ENV TURBO_TEAM=$TURBO_TEAM
-
+ENV NODE_ENV=build
 RUN --mount=type=secret,id=TURBO_TOKEN \
     if [ -f /run/secrets/TURBO_TOKEN ]; then \
         echo "Building with TURBO_TOKEN" && \

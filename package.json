@@ -4,6 +4,8 @@
   "description": "",
   "scripts": {
     "build": "turbo run build",
+    "docker:build": "docker buildx bake -f docker/docker-bake.local.hcl",
+    "docker:build:all": "docker buildx bake -f docker/docker-bake.local.hcl all",
     "test": "turbo run test",
     "test:watch": "turbo run test:watch",
     "dev": "turbo run dev",
