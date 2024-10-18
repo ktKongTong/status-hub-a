@@ -14,10 +14,13 @@ import {userRouter} from "@/router/user";
 import credentialSchemaRouter from '@/router/credential-schema';
 import credentialRouter from '@/router/credential';
 import routes from "@/router/routes";
+import {rateLimit} from "@/middleware/rate-limit";
+import { nsRouter } from '@/route-registry'
 
 const app = new OpenAPIHono()
 
 app
+  .use("*", rateLimit)
   .use("*", loggerMiddleware)
   .use("*", DBMiddleware())
   .use("*", KVMiddleware())
@@ -59,8 +62,6 @@ app
   .route('/', routes)
 
 
-import {nsRouter, sysSchemas} from '@/route-registry'
-import {initSystemSchemas} from "@/db/initial";
 app
   .route('/', nsRouter)
   // openapi
