@@ -14,14 +14,14 @@ declare module 'hono' {
 
 // todo, convert these task to MQ message
 
-const resend = new Resend(env('RESEND_API_KEY'))
 
 export const getEmailSender = (c:Context) => {
   return c.get('emailSender') ?? send()
 }
-const sender = env('RESEND_SENDER_ADDR') as string
-const send = ()=> {
 
+const send = ()=> {
+  const resend = new Resend(env('RESEND_API_KEY', "re_123"))
+  const sender = env('RESEND_SENDER_ADDR') as string
   const sendVerificationCode = async (to: string, code: string) => {
     return await resend.emails.send({
       from: sender,
