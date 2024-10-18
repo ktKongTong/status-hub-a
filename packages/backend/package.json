@@ -1,24 +1,17 @@
 {
   "name": "status-hub-backend",
   "scripts": {
-    "dev": "source .env.local && tsx watch src/index.ts",
-    "build": "tsx scripts/build.ts",
     "test": "vitest run",
     "test:watch": "vitest --watch",
     "check-types": "tsc --noEmit",
+    "dev": "source .env.local && tsx watch scripts/startup.ts",
+    "build": "tsx scripts/build.ts",
+    "start": "node --experimental-specifier-resolution=node ./dist/scripts/startup.js",
     "db:init": "rm -rf data && mkdir data && drizzle-kit generate && drizzle-kit migrate",
-    "rebuild": "rm -rf dist && npm run build",
-    "start": "node --experimental-specifier-resolution=node ./dist/scripts/migration.js && node --experimental-specifier-resolution=node ./dist/src/index.js",
-    "deploy": "wrangler deploy --minify src/index.ts",
     "db:prune": "rm -rf drizzle && rm -rf data && mkdir data && npm run db:generate && npm run db:migrate:node",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
     "db:kit:migrate:node": "tsx scripts/migration.ts",
-    "db:migrate:local": "wrangler d1 migrations apply cf-status --local",
-    "db:migrate:prod": "wrangler d1 migrations apply cf-status --remote",
-    "db:migrate:preview": "wrangler d1 migrations apply --env preview cf-status-preview --remote",
-    "db:studio:node": "drizzle-kit studio",
-    "db:studio:local": "LOCAL_DB_PATH=$(find .wrangler/state/v3/d1/miniflare-D1DatabaseObject -type f -name '*.sqlite' -print -quit) drizzle-kit studio"
+    "db:studio:node": "drizzle-kit studio"
   },
   "files": [
     "dist",
@@ -47,9 +40,11 @@
     "drizzle-orm": "^0.33.0",
     "drizzle-zod": "^0.5.1",
     "hono": "^4.6.5",
+    "hono-rate-limiter": "^0.4.0",
     "ioredis": "^5.4.1",
     "lucia": "^3.2.0",
     "ofetch": "^1.4.1",
+    "rate-limit-redis": "^4.2.0",
     "resend": "^4.0.0",
     "status-hub-shared": "workspace:*"
   },

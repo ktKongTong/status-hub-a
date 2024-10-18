@@ -29,7 +29,7 @@ log "Migration completed successfully." "$LOG_DIR/migration.log"
 
 # Start backend
 log "Starting backend..." "$LOG_DIR/backend.log"
-node --experimental-specifier-resolution=node /prod/status-hub-backend/dist/src/index.js 2>&1 | tee -a "$LOG_DIR/backend.log" &
+node --experimental-specifier-resolution=node /prod/status-hub-backend/dist/scripts/startup.js 2>&1 | tee -a "$LOG_DIR/backend.log" &
 BACKEND_PID=$!
 
 # Wait for backend to start (adjust sleep time as needed)

@@ -6,13 +6,10 @@ import {migrate} from "drizzle-orm/better-sqlite3/migrator";
 import { mkdir } from 'fs/promises';
 
 
-
-async function main() {
+export async function migration() {
   await mkdir('./data', {recursive: true});
   const sqlite =new  Database('./data/sqlite.db');
   const db = drizzle(sqlite);
   migrate(db, {migrationsFolder: './drizzle'});
   console.log("migrate finished")
 }
-
-main()

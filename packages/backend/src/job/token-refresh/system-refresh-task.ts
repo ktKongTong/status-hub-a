@@ -5,12 +5,12 @@ import {getDB} from "@/middleware/db";
 import {logger} from "status-hub-shared/utils";
 import {RefreshFunction} from "@/types";
 import {CredentialRefresh} from "status-hub-shared/models/dbo";
-import {credentialRefreshFuncs} from "@/route-registry";
+import ns from "@/route-collector";
 
 
 const getRefreshFuncByPlatformAndCredentialSchema =
   (platform: string, credentialType: string, version: number):RefreshFunction => {
-  return credentialRefreshFuncs[`system-${platform}-${credentialType}`]
+  return ns.credentialRefreshFuncs[`system-${platform}-${credentialType}-${version}`]
 }
 
 export class SystemRefreshTask extends JobHandler<CredentialRefresh> {
@@ -19,7 +19,7 @@ export class SystemRefreshTask extends JobHandler<CredentialRefresh> {
   }
 
   async handler(job: Job<CredentialRefresh>): Promise<any> {
-    const db = getDB("t" as any)
+    const db = getDB(undefined as any)
     logger.debug(`trigger system credential refresh task`)
     const credential = job.data
     if(credential.schema.createdBy !== 'system') { return }

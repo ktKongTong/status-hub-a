@@ -45,10 +45,11 @@ export const generateCredentialSchemaAndFieldsFromPlatformCredential = (c : Plat
   const credentialSchema = {
     id: id,
     platform: c.platform,
-    schemaVersion: c.version,
     credentialType: c.credentialType,
-    autoRefreshable: c.autoRefreshable,
+    schemaVersion: c.version,
     description: c.description,
+
+    autoRefreshable: c.autoRefreshable,
     maximumRefreshIntervalInSec: c.maximumRefreshIntervalInSec ?? 0,
     available: true,
     availablePermissions: c.availablePermissions?.join(",") ?? '',
@@ -58,7 +59,6 @@ export const generateCredentialSchemaAndFieldsFromPlatformCredential = (c : Plat
     schemaFields: credentialFields,
     status: 'ok',
     createdBy: 'system' as const,
-
   }
   return {
     schema:credentialSchema,
@@ -77,7 +77,6 @@ export interface PlatformCredential {
   maximumRefreshIntervalInSec?: number;
   description: string;
   expectExpires?: number;
-  // a user defined script
   refreshLogic?: string;
   availablePermissions?: string[],
   permissions?: string[],
