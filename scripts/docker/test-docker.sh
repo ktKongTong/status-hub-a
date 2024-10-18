@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MAX_RETRIES=3
+MAX_RETRIES=10
 
 docker compose -f docker/docker-compose.ci.yml up -d
 
